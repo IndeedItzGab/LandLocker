@@ -1,6 +1,6 @@
 # LandLocker: Bedrock Edition
 [![DONATE](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/GabrielBondoc09)
-[![TWITTER](https://img.shields.io/twitter/follow/iSiliconS?style=social)](https://x.com/IndeedItzGab?t=UL3bhR8CksHJSWn89duhuA&s=09)
+[![TWITTER](https://img.shields.io/twitter/follow/IndeedItzGab)](https://x.com/IndeedItzGab?t=UL3bhR8CksHJSWn89duhuA&s=09)
 [![DISCORD](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.gg/23vG3Np6AH)
 
 This is a Minecraft Bedrock Edition Add-On that is pretty much related or a port of [GriefPrevention](https://legacy.griefprevention.com/) to give players the right to claim a land that prevents other unauthorize players or damage to cause any griefs in the claimed land.
