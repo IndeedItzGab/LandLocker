@@ -11,7 +11,7 @@ First, you must download the LandLocker pack that you can find in the [release s
 You can now play with the the LandLocker!
 
 ## Feature
-While we currently developing LandLocker, these are the following availanle features:
+While we currently developing LandLocker, these are the following available features:
 - Claim a land.
 - Resizing the land with a Golden Shovel.
 - Protects your land from explosions, destroying blocks, placing blocks, and interacting with blocks and mobs.
@@ -21,9 +21,9 @@ While we currently developing LandLocker, these are the following availanle feat
 more features will be added in the near future!
 
 ## Contributions
-# Reporting Bugs
+### Reporting Bugs
 If you encounter any bugs while using LandLocker, please open an [issue](https://github.com/IndeedItzGab/LandLocker/issues/new) in our github repository. Ensure to include a detailed description of the issue and steps to reproduce it.
-# Submitting a Pull Request
+### Submitting a Pull Request
 We appreciate code contribution for this project. Especially if you have fixed a bug or implemented a new feature, you may submit a pull request.
 Please ensure your code follows our coding standard and includes tests where possible.
 

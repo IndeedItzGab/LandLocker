@@ -16,7 +16,7 @@ These commands are meant to be use by anyone with or without the permission leve
 |claimexplosion       |claimexplosions        |                        |Toggles whether explosives may be used in specific land claim.         |
 
 ## Operator/Admin Commands
-These commands are meant o be use by operators and cannot be accessible by non-operators.
+These commands are meant to be use by operators and cannot be accessible by non-operators.
 |NAME                      |ALIASES                |PARAMETERS              | DESCRIPTION                                                           |
 |--------------------------|-----------------------|------------------------|-----------------------------------------------------------------------|
 |adjustbonusclaimblocks    |acb                    |<player> <count>        |Adds or subtracts bonus claim blocks for a player.                     |
