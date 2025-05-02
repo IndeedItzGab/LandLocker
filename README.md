@@ -16,7 +16,7 @@ While we currently developing LandLocker, these are the following available feat
 - Resizing the land with a Golden Shovel.
 - Protects your land from explosions, destroying blocks, placing blocks, and interacting with blocks and mobs.
 - Trust a player if they can do anything in your land, access your containers like chests, let them only use the buttons and levers, or grant them a permission to share their level of permissions.
-- Combat is disabled to a player with a empty inbentory.
+- Combat is disabled to a player with a empty inventory.
 - Custom slash commands, see [Commands List](docs/COMMANDS.md)
 more features will be added in the near future!
 
