@@ -16,8 +16,7 @@ const commandInformation = {
 
 registerCommand(commandInformation, (origin) => {
   
-  if(origin.sourceBlock || origin.initiator || origin.sourceEntity.typeId !== "minecraft:player") return { status: 1 }
-  
+
   const player = origin.sourceEntity
   const c = checkLand(player)
   const isOwner = c?.owner.toLowerCase() === player.name.toLowerCase()

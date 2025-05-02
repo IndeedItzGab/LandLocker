@@ -15,8 +15,7 @@ const commandInformation = {
 
 registerCommand(commandInformation, (origin) => {
   
-  if(origin.sourceBlock || origin.initiator || origin.sourceEntity.typeId !== "minecraft:player") return { status: 1 }
-  
+
   const player = origin.sourceEntity
   
   const lands = db.fetch("land", true).filter(v => v.owner.toLowerCase() === player.name.toLowerCase());

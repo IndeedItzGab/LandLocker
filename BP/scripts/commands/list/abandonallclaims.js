@@ -21,8 +21,7 @@ const commandInformation = {
 
 registerCommand(commandInformation, (origin, args) => {
   
-  if(origin.sourceBlock || origin.initiator || origin.sourceEntity.typeId !== "minecraft:player") return { status: 1 }
-  
+
   const player = origin.sourceEntity
 
   if(player.hasTag("deleteAllLandQuery") && args === "confirm") {

@@ -21,8 +21,7 @@ const commandInformation = {
 
 registerCommand(commandInformation, (origin, targetPlayerName) => {
   
-  if(origin.sourceBlock || origin.initiator || origin.sourceEntity.typeId !== "minecraft:player") return { status: 1 }
-  
+
   const player = origin.sourceEntity
 
   if(!db.fetch("landPlayersList", true).some(data => data.name.toLowerCase() === targetPlayerName.toLowerCase())) return player.sendMessage(`§cNo player by that name has logged in recently.`)
