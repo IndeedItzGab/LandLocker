@@ -27,15 +27,10 @@ If you encounter any bugs while using LandLocker, please open an [issue](https:/
 We appreciate code contribution for this project. Especially if you have fixed a bug or implemented a new feature, you may submit a pull request.
 Please ensure your code follows our coding standard and includes tests where possible.
 
-## License
-This LandLocker project is licensed under the [GPLv3 license](LICENSE).
-That means that you:
-- CAN modify, copy, and distribute this addon.
-- CAN use it privately or for commercial use.
-- CAN'T change the license of your modified version.
-- CAN'T make the modified source code closed.
-- HAVE TO indicate any changes in the modified version.
-You may also don't have to credit me, but it would be great if you did to help support my work.
+## Copyright
+© 2025 IndeedItzGab. All rights reserved.
+- You may not distribute this project without explicit permission and proper credit.
+- You may modify this project for **personal use only**.
 
 ## Support
 It took time for me to make this project by myself, so if you want to support me, you can donate in my [PayPal](https://www.paypal.me/GabrielBondoc09)
