@@ -4,6 +4,7 @@ import {
 } from "@minecraft/server";
 import { registerCommand }  from "../../commandRegistry.js"
 import * as db from "../../../utilities/storage.js"
+import { messages } from "../../../messages.js"
 
 const commandInformation = {
   name: "deleteallclaims",
@@ -24,9 +25,9 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
 
   const player = origin.sourceEntity
 
-  if(!db.fetch("landPlayersList", true).some(data => data.name.toLowerCase() === targetPlayerName.toLowerCase())) return player.sendMessage(`§cNo player by that name has logged in recently.`)
+  if(!db.fetch("landPlayersList", true).some(data => data.name.toLowerCase() === targetPlayerName.toLowerCase())) return player.sendMessage(`§c${messages.PlayerNotFound2}`)
   db.store("land", db.fetch("land", true).filter(data => data?.owner.toLowerCase() !== targetPlayerName.toLowerCase()))
-  player.sendMessage(`§aDeleted all of ${targetPlayerName}'s claims.`)
+  player.sendMessage(`§a${messages.DeleteAllSuccess.replace("{0}", targetPlayerName)}`)
 
   return {
     status: 0

@@ -4,6 +4,7 @@ import {
 } from "@minecraft/server";
 import { registerCommand }  from "../../commandRegistry.js"
 import * as db from "../../../utilities/storage.js"
+import { messages } from "../../../messages.js"
 
 const commandInformation = {
   name: "setaccruedclaimblocks",
@@ -17,24 +18,24 @@ const commandInformation = {
       optional: false
     },
     {
-      name: "count",
+      name: "amount",
       type: 1,
       optional: false
     }
   ]
 }
 
-registerCommand(commandInformation, (origin, targetPlayerName, count) => {
+registerCommand(commandInformation, (origin, targetPlayerName, amount) => {
   
 
   const player = origin.sourceEntity
   
   let landPlayersList = db.fetch("landPlayersList", true)
   let targetPlayerData = landPlayersList.find(data => data.name.toLowerCase() === targetPlayerName.toLowerCase())
-  if(!targetPlayerData) return player.sendMessage(`§cNo player by that name has logged in recently.`)
+  if(!targetPlayerData) return player.sendMessage(`§c${messages.PlayerNotFound2}`)
   targetPlayerData.claimBlocks.play = parseInt(amount)
   db.store("landPlayersList", landPlayersList);
-  player.sendMessage(`§aUpdated accrued claim blocks.`)
+  player.sendMessage(`§a${messages.SetClaimBlocksSuccess}`)
  
   return {
     status: 0

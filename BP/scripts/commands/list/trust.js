@@ -6,6 +6,7 @@ import { registerCommand }  from "../commandRegistry.js"
 import * as db from "../../utilities/storage.js"
 import "../../utilities/checkLand.js"
 import "../../utilities/trustUtility/trustPerms.js"
+import { messages } from "../../messages.js"
 
 const commandInformation = {
   name: "trust",
@@ -29,7 +30,8 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
   const isOwner = c?.owner.toLowerCase() === player.name.toLowerCase()
   let lands = db.fetch("land", true)
   
-  if(isOwner && !c) return player.sendMessage(`§cStand inside the claim where you want to grant permission.`)
+  if(isOwner && !c) return player.sendMessage(`§c${messages.GrantPermissionNoClaim}`)
+  if(targetPlayerName !== "all" && (!db.fetch("landPlayersList", true).some(data => data.name.toLowerCase() === targetPlayerName.toLowerCase()))) return player.sendMessage(`§c${messages.PlayerNotFound2}`)
   
   if (c?.id) {
     let land = lands.find(v => v?.id === c?.id);
@@ -37,20 +39,23 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
     
     if(!isOwner) {
       const playerLandData = land.members.find(v => v.name.toLowerCase() === player.name.toLowerCase() && land.owner.toLowerCase() !== player.name.toLowerCase())
-      if(playerLandData?.permissions?.permissionTrust === false || !playerLandData) return player.sendMessage(`§cYou don't have ${land.owner}'s permission to manage permissions here.`);
-      if(!playerLandData?.permissions?.fullTrust) return player.sendMessage(`§cYou can't grant a permission you don't have yourself.`)
+      if(playerLandData?.permissions?.permissionTrust === false || !playerLandData) return player.sendMessage(`§c${messages.NoPermissionTrust.replace("{0}", land.owner)}`);
+      if(!playerLandData?.permissions?.fullTrust) return player.sendMessage(`§c${messages.CantGrantThatPermission}`)
     }
 
     updatePermissions(land, targetPlayerName.toLowerCase(), "fullTrust", player, false);
     lands = lands.map(l => l.id === land.id ? land : l);
   } else {
-   for (let land of lands.filtrr(data => data.owner === player.name.toLowerCase())) {
+   for (let land of lands.filter(data => data.owner === player.name.toLowerCase())) {
       land.members = land.members || [];
       updatePermissions(land, targetPlayerName.toLowerCase(), "fullTrust", player, true);
     }
   }
   
-  player.sendMessage(`§aGranted ${targetPlayerName === "all" ? "the public" : targetPlayerName} permission to build in ${c?.id ? "this claim." : "all your claims."}`)
+  const who = targetPlayerName === "all" ? messages.CollectivePublic : targetPlayerName
+  const permissionType = messages.BuildPermission
+  const where = c?.id ? messages.LocationCurrentClaim : messages.LocationAllClaims
+  player.sendMessage(`§a${messages.GrantPermissionConfirmation.replace("{0}", who).replace("{1}", permissionType).replace("{2}", where)}`)
   db.store("land", lands);
   return {
     status: 0

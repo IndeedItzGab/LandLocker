@@ -5,6 +5,7 @@ import {
 import { registerCommand }  from "../commandRegistry.js"
 import * as db from "../../utilities/storage.js"
 import "../../utilities/claimBlocks.js"
+import { messages } from "../../messages.js"
 
 const commandInformation = {
   name: "claimlist",
@@ -24,13 +25,13 @@ registerCommand(commandInformation, (origin) => {
   const bonus = playerStatus.claimBlocks.bonus
   let l = ''
   if(lands.length === 0) {
-    player.sendMessage(`§e${play} blocks from play + ${bonus} bonus = ${play + bonus} total.`)
+    player.sendMessage(`§e${messages.StartBlockMath.replace("{0}", play).replace("{1}", bonus).replace("{2}", play + bonus)}`)
     return { status: 0 }
   }
   for(const land of lands) {
-    l +=`\n§eworld: x${land.bounds.rx}, z${land.bounds.lz} {-${(Math.abs(land.bounds.rx - land.bounds.lx) + 1) * (Math.abs(land.bounds.rz - land.bounds.lz) + 1)} blocks}`;
+    l +=`\n§eworld: x${land.bounds.rx}, z${land.bounds.lz}${messages.ContinueBlockMath.replace("{0}", (Math.abs(land.bounds.rx - land.bounds.lx) + 1) * (Math.abs(land.bounds.rz - land.bounds.lz) + 1))}`;
   }
-  player.sendMessage(`§e${play} blocks from play + ${bonus} bonus = ${play + bonus} total.\nClaims:` + l + `§e\n = ${claimBlocks(player)} blocks left to spend`)
+  player.sendMessage(`§e${messages.StartBlockMath.replace("{0}", play).replace("{1}", bonus).replace("{2}", play + bonus)}\n${messages.ClaimsListHeader}` + l + `§e\n${messages.EndBlockMath.replace("{0}", claimBlocks(player))}`)
 
   return {
     status: 0

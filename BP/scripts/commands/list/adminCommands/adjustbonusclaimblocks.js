@@ -4,6 +4,7 @@ import {
 } from "@minecraft/server";
 import { registerCommand }  from "../../commandRegistry.js"
 import * as db from "../../../utilities/storage.js"
+import { messages } from "../../../messages.js"
 
 const commandInformation = {
   name: "adjustbonusclaimblocks",
@@ -31,11 +32,11 @@ registerCommand(commandInformation, (origin, targetPlayerName, count) => {
   let landPlayersList = db.fetch("landPlayersList", true)
   
   let targetPlayerData = landPlayersList.find(data => data.name.toLowerCase() === targetPlayerName.toLowerCase())
-  if(!targetPlayerData) return player.sendMessage(`§cNo player by that name has logged in recently.`)
+  if(!targetPlayerData) return player.sendMessage(`§c${messages.PlayerNotFound2}`)
   targetPlayerData.claimBlocks.bonus = Math.max(0, targetPlayerData.claimBlocks.bonus + parseInt(count));
   
   db.store("landPlayersList", landPlayersList);
-  player.sendMessage(`§aAdjusted ${targetPlayerName}'s bonus claim blocks by ${count}. New total bonus blocks: ${targetPlayerData.claimBlocks.bonus}.`)
+  player.sendMessage(`§a${messages.AdjustBlocksSuccess.replace("{0}", targetPlayerName).replace("{1}", count).replace("{2}", targetPlayerData.claimBlocks.bonus)}`)
 
   return {
     status: 0

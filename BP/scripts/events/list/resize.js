@@ -1,5 +1,6 @@
 import { world, system } from "@minecraft/server"
 import * as db from "../../utilities/storage.js" 
+import { messages } from "../../messages.js"
 import "../../utilities/checkLand.js"
 import "../../utilities/claimBlocks.js"
 import "../../utilities/getTopBlock.js"
@@ -55,27 +56,79 @@ function resize(event) {
       })
       // Check if the player have enough claim blocks.
       const permutationClaimBlocks = claimBlocks(player, data.id) - (Math.abs(data.bounds.rx - data.bounds.lx) + 1) * (Math.abs(data.bounds.rz - data.bounds.lz) + 1)
-      if(permutationClaimBlocks < 0) return player.sendMessage(`§cYou don't have enough blocks for this size.  You need ${Math.abs(permutationClaimBlocks)} more.`)
+      if(permutationClaimBlocks < 0) return player.sendMessage(`§c${messages.ResizeNeedMoreBlocks.replace("{0}", Math.abs(permutationClaimBlocks))}`)
       
       // If it overlaps with other claim then it stop updating the land size.
       const overlap = overlapCheck(player, data.bounds.lx, data.bounds.rx, data.bounds.lz, data.bounds.rz, data.id)
-      if(overlap && overlap?.id !== data.id) return player.sendMessage(`§cThere is a land overlapping your land. The land edit was not saved.`) // Self-made message
+      if(overlap && overlap?.id !== data.id) return player.sendMessage(`§c${messages.ResizeFailOverlap}`) // Self-made message
       
-      const corners = [
-        { x: data.bounds.lx, z: data.bounds.rz, y: getTopBlock({x: data.bounds.lx, z: data.bounds.rz}), type: "glowstone" },
-        { x: data.bounds.lx, z: data.bounds.rz - 1, y: getTopBlock({x: data.bounds.lx, z: data.bounds.rz - 1}), type: "gold_block" },
-        { x: data.bounds.lx + 1, z: data.bounds.rz, y: getTopBlock({x: data.bounds.lx + 1, z: data.bounds.rz}), type: "gold_block" },
-        { x: data.bounds.lx, z: data.bounds.lz, y: getTopBlock({x: data.bounds.lx, z: data.bounds.lz}), type: "glowstone" },
-        { x: data.bounds.lx + 1, z: data.bounds.lz, y: getTopBlock({x: data.bounds.lx + 1, z: data.bounds.lz}), type: "gold_block" },
-        { x: data.bounds.lx, z: data.bounds.lz + 1, y: getTopBlock({x: data.bounds.lx, z: data.bounds.lz + 1}), type: "gold_block" },
-        { x: data.bounds.rx, z: data.bounds.rz, y: getTopBlock({x: data.bounds.rx, z: data.bounds.rz}), type: "glowstone" },
-        { x: data.bounds.rx, z: data.bounds.rz - 1, y: getTopBlock({x: data.bounds.rx, z: data.bounds.rz - 1}), type: "gold_block" },
-        { x: data.bounds.rx - 1, z: data.bounds.rz, y: getTopBlock({x: data.bounds.rx - 1, z: data.bounds.rz}), type: "gold_block" },
-        { x: data.bounds.rx, z: data.bounds.lz, y: getTopBlock({x: data.bounds.rx, z: data.bounds.lz}), type: "glowstone" },
-        { x: data.bounds.rx - 1, z: data.bounds.lz, y: getTopBlock({x: data.bounds.rx - 1, z: data.bounds.lz}), type: "gold_block" },
-        { x: data.bounds.rx, z: data.bounds.lz + 1, y: getTopBlock({x: data.bounds.rx, z: data.bounds.lz + 1}), type: "gold_block" },
+//      const corners = [
+//         { x: data.bounds.lx, z: data.bounds.rz, y: getTopBlock({x: data.bounds.lx, z: data.bounds.rz}), type: "glowstone" },
+//         { x: data.bounds.lx, z: data.bounds.rz - 1, y: getTopBlock({x: data.bounds.lx, z: data.bounds.rz - 1}), type: "gold_block" },
+//         { x: data.bounds.lx + 1, z: data.bounds.rz, y: getTopBlock({x: data.bounds.lx + 1, z: data.bounds.rz}), type: "gold_block" },
+//         { x: data.bounds.lx, z: data.bounds.lz, y: getTopBlock({x: data.bounds.lx, z: data.bounds.lz}), type: "glowstone" },
+//         { x: data.bounds.lx + 1, z: data.bounds.lz, y: getTopBlock({x: data.bounds.lx + 1, z: data.bounds.lz}), type: "gold_block" },
+//         { x: data.bounds.lx, z: data.bounds.lz + 1, y: getTopBlock({x: data.bounds.lx, z: data.bounds.lz + 1}), type: "gold_block" },
+//         { x: data.bounds.rx, z: data.bounds.rz, y: getTopBlock({x: data.bounds.rx, z: data.bounds.rz}), type: "glowstone" },
+//         { x: data.bounds.rx, z: data.bounds.rz - 1, y: getTopBlock({x: data.bounds.rx, z: data.bounds.rz - 1}), type: "gold_block" },
+//         { x: data.bounds.rx - 1, z: data.bounds.rz, y: getTopBlock({x: data.bounds.rx - 1, z: data.bounds.rz}), type: "gold_block" },
+//         { x: data.bounds.rx, z: data.bounds.lz, y: getTopBlock({x: data.bounds.rx, z: data.bounds.lz}), type: "glowstone" },
+//         { x: data.bounds.rx - 1, z: data.bounds.lz, y: getTopBlock({x: data.bounds.rx - 1, z: data.bounds.lz}), type: "gold_block" },
+//         { x: data.bounds.rx, z: data.bounds.lz + 1, y: getTopBlock({x: data.bounds.rx, z: data.bounds.lz + 1}), type: "gold_block" },
+//       ];
+      const cornerOffsets = [
+        { dx: 0, dz: 0, type: "glowstone" },
+        { dx: 1, dz: 0, type: "gold_block" },
+        { dx: 0, dz: 1, type: "gold_block" }
       ];
       
+      const baseCorners = [
+        { x: data.bounds.lx, z: data.bounds.rz },
+        { x: data.bounds.lx, z: data.bounds.lz },
+        { x: data.bounds.rx, z: data.bounds.lz },
+        { x: data.bounds.rx, z: data.bounds.rz }
+      ];
+      
+      let corners = [];
+      
+      // Responsible for setting up the corner part of the land
+      for (const base of baseCorners) {
+        for (const offset of cornerOffsets) {
+          const x = base.x + offset.dx * (base.x === data.bounds.rx ? -1 : 1);
+          const z = base.z + offset.dz * (base.z === data.bounds.rz ? -1 : 1);
+          const y = getTopBlock({ x, z });
+          corners.push({ x, y, z, type: offset.type });
+        }
+      }
+      
+      // Responsible for in-between edit blocks
+      for (let i = 0; i < baseCorners.length; i++) {
+        const current = baseCorners[i];
+        const next = baseCorners[(i + 1) % baseCorners.length];
+        
+        if (current.x === next.x) {
+          const step = current.z < next.z ? 10 : -10;
+          for (let z = current.z; step > 0 ? z <= next.z : z >= next.z; z += step) {
+            const remaining = Math.abs(next.z - z);
+            if (remaining >= 6) {
+              const y = getTopBlock({ x: current.x, z });
+              if(z === current.z) continue
+              corners.push({ x: current.x, y, z, type: "gold_block" });
+            }
+          }
+        } else if (current.z === next.z) {
+          const step = current.x < next.x ? 10 : -10;
+          for (let x = current.x; step > 0 ? x <= next.x : x >= next.x; x += step) {
+            const remaining = Math.abs(next.x - x);
+            if (remaining >= 6) {
+              const y = getTopBlock({ x, z: current.z });
+              if(x === current.x) continue
+              corners.push({ x, y, z: current.z, type: "gold_block" });
+            }
+          }
+        }
+      }
+
       
       const blocks = db.fetch(`landCacheBlocks:${player.name.toLowerCase()}`, true) || []
       let updateCacheBlocksData = []
@@ -107,6 +160,7 @@ function resize(event) {
       }
       db.store(`landCacheBlocks:${player.name.toLowerCase()}`, updateCacheBlocksData)
       db.store("land", lands)
+      player.sendMessage(`§e${messages.ClaimResizeSuccess.replace("{0}", claimBlocks(player))}`)
       return true; // Return to make it won't declare another side to be adjusted.
     }
     
@@ -118,7 +172,7 @@ function resize(event) {
     system.run(() => {
       player.addTag(`editingLand:${data.id}:${x}:${z}`);
     })
-    player.sendMessage(`§eResizing claim. Use your shovel again at the new location for this corner.`);
+    player.sendMessage(`§e${messages.ResizeStart}`);
     return true
   })
 }

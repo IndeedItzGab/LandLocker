@@ -4,6 +4,7 @@ import {
 } from "@minecraft/server";
 import { registerCommand }  from "../../commandRegistry.js"
 import * as db from "../../../utilities/storage.js"
+import { messages } from "../../../messages.js"
 import "../../../utilities/checkLand.js"
 
 const commandInformation = {
@@ -20,9 +21,9 @@ registerCommand(commandInformation, (origin) => {
   const player = origin.sourceEntity
   const c = checkLand(player)
 
-  if(!c) return player.sendMessage(`§cThere's no claim here.`)
+  if(!c) return player.sendMessage(`§c${messages.DeleteClaimMissing}`)
   db.store("land", db.fetch("land", true).filter(data => data?.id !== c?.id))
-  player.sendMessage(`§aClaim deleted.`)
+  player.sendMessage(`§a${messages.DeleteSuccess}`)
   
   return {
     status: 0

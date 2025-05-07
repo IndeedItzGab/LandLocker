@@ -4,6 +4,7 @@ import {
 } from "@minecraft/server";
 import { registerCommand }  from "../commandRegistry.js"
 import * as db from "../../utilities/storage.js"
+import { messages } from "../../messages.js"
 import "../../utilities/checkLand.js"
 
 const commandInformation = {
@@ -31,8 +32,9 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
     land.members = land.members || [];
     
     if(!isOwner) {
-      if(targetPlayerName.toLowerCase() === "all") return player.sendMessage(`§cOnly the claim owner can clear all permissions.`)
-      if(land.members.find(v => v.name.toLowerCase() === targetPlayerName.toLowerCase()).permissions.permissionTrust) return player.sendMessage(`§cOnly the claim owner can demote a manager.`)
+      if(targetPlayerName.toLowerCase() === "all") return player.sendMessage(`§c${messages.ClearPermsOwnerOnly}`)
+      // Marked, if player with no permission manager successfully used this, fix it.
+      if(land.members.find(v => v.name.toLowerCase() === targetPlayerName.toLowerCase()).permissions.permissionTrust) return player.sendMessage(`§c${messages.ManagersDontUntrustManagers}`)
     }
     untrustPermission(land, targetPlayerName, player, false);
     lands = lands.map(l => l.id === land.id ? land : l);
@@ -44,10 +46,18 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
     }
   }
   
-  let who = !c?.id ? "§aCleared permisisons in ALL your claims. " : "§aCleared permissions in this claim. "
-  let who2 = c?.id ? `§aRevoke ${targetPlayerName}'s access to this claim. ` : `§aRevoke ${targetPlayerName}'s to ALL your claims. `
-  let where = c?.id ? "To set permission for ALL your claims, stand outside them." : "To set permissions for a single claim, stand inside it."
-  player.sendMessage(`${targetPlayerName.toLowerCase() === "all" ? who : who2} ${where}`)
+
+  if(c?.id && targetPlayerName.toLowerCase() === "all") {
+    message = `§a${messages.ClearPermissionsOneClaim}`
+  } else if(c?.id && targetPlayerName.toLowerCase() !== "all") {
+    message = `§a${messages.UntrustIndividualSingleClaim.replace("{0}", targetPlayerName)}`
+  } else if(!c?.id && targetPlayerName.toLowerCase() === "all") {
+    message = `§a${messages.UntrustEveryoneAllClaims}`
+  } else {
+    message = `§a${messages.UntrustIndividualAllClaims.replace("{0}", targetPlayerName)}`
+  }
+  
+  player.sendMessage(message)
   db.store("land", lands);
   return {
     status: 0

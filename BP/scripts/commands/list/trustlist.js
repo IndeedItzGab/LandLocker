@@ -4,6 +4,7 @@ import {
 } from "@minecraft/server";
 import { registerCommand }  from "../commandRegistry.js"
 import * as db from "../../utilities/storage.js"
+import { messages } from "../../messages.js"
 import "../../utilities/claimBlocks.js"
 import "../../utilities/checkLand.js"
 import "../../utilities/overlapCheck.js"
@@ -23,7 +24,7 @@ registerCommand(commandInformation, (origin) => {
   const c = checkLand(player)
 
   let lands = db.fetch("land", true) || []
-  if(!c) return player.sendMessage("§cStand inside the claim you're curious about.")
+  if(!c) return player.sendMessage(`§c${messages.TrustListNoClaim}`)
   let land = lands.find(v => v?.id == c?.id)
   let manage = "", build = "", containers = "", access = ""
   
@@ -37,24 +38,17 @@ registerCommand(commandInformation, (origin) => {
     access += "public "
   }
   
-  for(const member of land.members) {
-    if(member.permissions.permissionTrust === true) {
-       manage += `${member.name} `
-    } else if(member.permissions.fullTrust === true) {
-      build += `${member.name} `
-    } else if(member.permissions.containerTrust === true) {
-      containers += `${member.name} `
-    } else if(member.permissions.accessTrust === true) {
-      access += `${member.name} `
-    }
-  }
+  manage += land.members.filter(d => d.permissions.permissionTrust).map(m => m.name).join(" ")
+  build += land.members.filter(d => d.permissions.fullTrust).map(m => m.name).join(" ")
+  containers += land.members.filter(d => d.permissions.containerTrust).map(m => m.name).join(" ")
+  access += land.members.filter(d => d.permissions.accessTrust).map(m => m.name).join(" ")
   
-  player.sendMessage(`§bExplicit permissions here:
+  player.sendMessage(`§b${messages.TrustListHeader}
 §6>${manage}
 §e>${build}
 §a>${containers}
 §9>${access}
-§6Manage §eBuild §aContainers §9Access`)
+§6${messages.Manage} §e${messages.Build} §a${messages.Containers} §9${messages.Access}`)
   return {
     status: 0
   }

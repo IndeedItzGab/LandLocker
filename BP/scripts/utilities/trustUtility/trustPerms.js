@@ -4,7 +4,7 @@ import * as db from "../storage.js"
 globalThis.updatePermissions = (land, targetName, type, player, isAllLands) => {
   const existingMember = land.members.find(m => m.name === targetName);
   const ownerPermissions = land.members.find(v => v.name.toLowerCase() === land.owner.toLowerCase())
-  if(targetName !== "all" && (!db.fetch("landPlayersList", true).some(data => data.name.toLowerCase() === targetName.toLowerCase()))) return player.sendMessage(`§cNo player by that name has logged in recently.`)
+
   if(targetName.toLowerCase() === "all") {
     switch(type) {
       case "fullTrust":
@@ -77,7 +77,6 @@ globalThis.updatePermissions = (land, targetName, type, player, isAllLands) => {
       land?.members.push(json)
     }
   }
-  permissionRepeatMessage = false
 }
 
 globalThis.updatePermissions = updatePermissions;

@@ -27,7 +27,7 @@ export function registerCommand(comInfo, callback) {
         commandInformation: {
           name: `${config.commands.namespace}:${alias}`,
           description: comInfo?.description,
-          permissionLevel: comInfo.permissionLevel || 0,
+          permissionLevel: comInfo?.permissionLevel || 0,
           optionalParameters: optionalParameters,
           mandatoryParameters: mandatoryParameters
         },

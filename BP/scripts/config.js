@@ -1,3 +1,5 @@
+// Other configuration will be implemented in the near future.
+
 export const config = {
   commands: {
     namespace: "land"
@@ -8,10 +10,11 @@ export const config = {
       Claim_Blocks_Accrued_Per_Hour: {
         Default: 100
       },
-      Accrued_Idle_Threshold: 15,
+      Accrued_Idle_Threshold: 60,
       Max_Accrued_Claim_Blocks: {
         Default: 80000
-      }
+      },
+      AutomaticNewPlayerClaimsRadius: 4
     }
   }
 }
