@@ -4,6 +4,7 @@ import {
 } from "@minecraft/server";
 import { registerCommand }  from "../commandRegistry.js"
 import * as db from "../../utilities/storage.js"
+import { messages } from "../../messages.js"
 import "../../utilities/claimBlocks.js"
 import "../../utilities/checkLand.js"
 import "../../utilities/overlapCheck.js"
@@ -20,14 +21,13 @@ const commandInformation = {
 
 registerCommand(commandInformation, (origin, args1) => {
   
-  if(origin.sourceBlock || origin.initiator || origin.sourceEntity.typeId !== "minecraft:player") return { status: 1 }
-  
+
   const player = origin.sourceEntity
   const c = checkLand(player)
   const isOwner = c?.owner.toLowerCase() === player.name.toLowerCase()
   let lands = db.fetch("land", true)
-  if(!c || !isOwner) return player.sendMessage(`§cThere's no claim here.`)
-  player.sendMessage(`§a${c.setting.allowExplosions ? "This claim id now vulnerable yo explosions.  Use /lc:claimexplosions again to re-enable protections." : "This claim is now protected from explosions.  Use /lc:claimexplosions again to disable."}`)
+  if(!c || !isOwner) return player.sendMessage(`§c${messages.DeleteClaimMissing}`)
+  player.sendMessage(`§a${!c.setting.allowExplosions ? messages.ExplosivesEnabled : messages.ExplosivesDisabled}`)
   let land = lands.find(land => land.id === c.id)
   land.setting.allowExplosions = !land.setting.allowExplosions
   

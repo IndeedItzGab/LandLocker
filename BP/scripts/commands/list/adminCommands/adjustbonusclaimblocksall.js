@@ -4,6 +4,7 @@ import {
 } from "@minecraft/server";
 import { registerCommand }  from "../../commandRegistry.js"
 import * as db from "../../../utilities/storage.js"
+import { messages } from "../../../messages.js"
 
 const commandInformation = {
   name: "adjustbonusclaimblockall",
@@ -21,8 +22,6 @@ const commandInformation = {
 
 registerCommand(commandInformation, (origin, count) => {
   
-  if(origin.sourceBlock || origin.initiator || origin.sourceEntity.typeId !== "minecraft:player") return { status: 1 }
-  
   const player = origin.sourceEntity
 
   let landPlayersList = db.fetch("landPlayersList", true)
@@ -32,7 +31,7 @@ registerCommand(commandInformation, (origin, count) => {
   })
 
   db.store("landPlayersList", landPlayersList);
-  player.sendMessage(`§aAdjusted all online players' bonus claim blocks by ${count}.`)
+  player.sendMessage(`§a${messages.AdjustBlocksAllSuccess.replace("{0}", count)}`)
 
   return {
     status: 0

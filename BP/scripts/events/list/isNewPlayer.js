@@ -13,7 +13,5 @@ world.afterEvents.playerSpawn.subscribe((event) => {
       bonus: 0
     }
   });
-  player.runCommand("give @s minecraft:golden_shovel")
-  player.sendMessage(`§eYou were given a newbie-kit from LandLocker! containing Golden Shovel only.`)
   db.store("landPlayersList", landPlayersList)
 })

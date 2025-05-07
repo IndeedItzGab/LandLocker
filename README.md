@@ -8,6 +8,7 @@ This is a Minecraft Bedrock Edition Add-On that is pretty much related or a port
 ## Instalation
 First, you must download the LandLocker pack that you can find in the [release section](https://github.com/IndeedItzGab/LandLocker/releases/). After that, import it with your minecraft. Once it's imported, you can now apply it to a world or realm. The "BETA APIs" experimental feature must be enabled.
 ![BETA APIs](docs/images/beta_apis.jpg)
+[Proper Instructions for installation.](docs/INSTRUCTION.md)
 You can now play with the the LandLocker!
 
 ## Feature
@@ -18,7 +19,11 @@ While we currently developing LandLocker, these are the following available feat
 - Trust a player if they can do anything in your land, access your containers like chests, let them only use the buttons and levers, or grant them a permission to share their level of permissions.
 - Combat is disabled to a player with a empty inventory.
 - Custom slash commands, see [Commands List](docs/COMMANDS.md)
+
 more features will be added in the near future!
+
+## Frequently Asked Questions
+You can checkout this [FAQ page](docs/FAQ.md) for questions that is commonly asked related to this project.
 
 ## Contributions
 ### Reporting Bugs
@@ -34,3 +39,7 @@ Please ensure your code follows our coding standard and includes tests where pos
 
 ## Support
 It took time for me to make this project by myself, so if you want to support me, you can donate in my [PayPal](https://www.paypal.me/GabrielBondoc09)
+
+## Contact
+- Discord Server: https://discord.gg/23vG3Np6AH
+- Twitter/X: https://x.com/IndeedItzGab?t=UL3bhR8CksHJSWn89duhuA&s=09

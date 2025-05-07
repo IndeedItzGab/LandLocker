@@ -4,6 +4,8 @@ import {
 } from "@minecraft/server";
 import { registerCommand }  from "../commandRegistry.js"
 import * as db from "../../utilities/storage.js"
+import { messages } from "../../messages.js"
+import { config } from "../../config.js"
 import "../../utilities/claimBlocks.js"
 import "../../utilities/checkLand.js"
 import "../../utilities/overlapCheck.js"
@@ -22,10 +24,7 @@ const commandInformation = {
   ]
 }
 
-registerCommand(commandInformation, (origin, radius = 5) => {
-  
-  // Only-Player Filter
-  if(origin.sourceBlock || origin.initiator || origin.sourceEntity.typeId !== "minecraft:player") return { status: 1 }
+registerCommand(commandInformation, (origin, radius = config.LandLocker.Claims.AutomaticNewPlayerClaimsRadius) => {
   
   const player = origin.sourceEntity
   const c = checkLand(player)
@@ -37,9 +36,9 @@ registerCommand(commandInformation, (origin, radius = 5) => {
   const permutationClaimBlocks = claimBlocks(player) - (Math.abs(rightX - leftX) + 1) * (Math.abs(rightZ- leftZ) + 1)
   let l = db.fetch('land', true)
   
-  if(permutationClaimBlocks < 0) return player.sendMessage(`§cYou don't have enough blocks to claim that entire area.  You need ${Math.abs(permutationClaimBlocks)} more blocks.`)
-  if(isOwner) return player.sendMessage(`§cYou can't create a claim here because it would overlap your other claim. Use /abandonclaim to delete it, or use your shovel at a corner to resize it.`)
-  if(overlapCheck(player, leftX, rightX, leftZ, rightZ) || c) return player.sendMessage(`§cYour selected area overlaps an existing claim.`)
+  if(permutationClaimBlocks < 0) return player.sendMessage(`§c${messages.CreateClaimInsufficientBlocks.replace("{0}", Math.abs(permutationClaimBlocks))}`)
+  if(isOwner) return player.sendMessage(`§c${messages.CreateClaimFailOverlap}`)
+  if(overlapCheck(player, leftX, rightX, leftZ, rightZ) || c) return player.sendMessage(`§c${messages.CreateClaimFailOverlapShort}`)
 
   const data = {
     owner: player.name.toLowerCase(),
@@ -66,7 +65,7 @@ registerCommand(commandInformation, (origin, radius = 5) => {
   
   l.push(data)
   db.store("land", l)
-  player.sendMessage(`§aClaim created! Use !trust to share it with friends.`)
+  player.sendMessage(`§a${messages.CreateClaimSuccess}`)
 
   return {
     status: 0

@@ -5,6 +5,7 @@ import {
 import { registerCommand }  from "../commandRegistry.js"
 import * as db from "../../utilities/storage.js"
 import "../../utilities/claimBlocks.js"
+import { messages } from "../../messages.js"
 
 const commandInformation = {
   name: "abandonallclaims",
@@ -21,20 +22,20 @@ const commandInformation = {
 
 registerCommand(commandInformation, (origin, args) => {
   
-  if(origin.sourceBlock || origin.initiator || origin.sourceEntity.typeId !== "minecraft:player") return { status: 1 }
-  
+
   const player = origin.sourceEntity
 
   if(player.hasTag("deleteAllLandQuery") && args === "confirm") {
     system.run(() => {
       player.removeTag(`deleteAllLandQuery`)
-      db.store("land", db.fetch("land", true).filter(data => data.owner !== player.name.toLowerCase()));
-      player.sendMessage(`§aClaims abandoned.  You now have ${claimBlocks(player)} available claim blocks.`)
     })
+    db.store("land", db.fetch("land", true).filter(data => data.owner !== player.name.toLowerCase()));
+    let remainingClaimBlocks = claimBlocks(player)
+    player.sendMessage(`§a${messages.SuccessfulAbandon.replace("{0}", remainingClaimBlocks)}`)
   } else {
     system.run(() => {
       player.addTag(`deleteAllLandQuery`)
-      player.sendMessage(`§cAre you sure you want to abandon ALL of your claims? Please confirm with /abandonallclaims confirm`)
+      player.sendMessage(`§c${messages.ConfirmAbandonAllClaims}`)
     })
   }
   

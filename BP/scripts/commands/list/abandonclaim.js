@@ -3,6 +3,7 @@ import {
   system
 } from "@minecraft/server";
 import { registerCommand }  from "../commandRegistry.js"
+import { messages } from "../../messages.js"
 import * as db from "../../utilities/storage.js"
 import "../../utilities/claimBlocks.js"
 import "../../utilities/checkLand.js"
@@ -16,15 +17,14 @@ const commandInformation = {
 
 registerCommand(commandInformation, (origin) => {
   
-  if(origin.sourceBlock || origin.initiator || origin.sourceEntity.typeId !== "minecraft:player") return { status: 1 }
-  
+
   const player = origin.sourceEntity
   const c = checkLand(player)
   const isOwner = c?.owner.toLowerCase() === player.name.toLowerCase()
 
-  if(!isOwner) return player.sendMessage(`§eStand in the claim you want to delete, or consider /abandonallclaims.`)
+  if(!isOwner) return player.sendMessage(`§e${messages.AbandonClaimMissing}`)
   db.store("land", db.fetch("land", true).filter(data => data.id !== c?.id && data.owner === player.name.toLowerCase()));
-  player.sendMessage(`§aClaim abandoned.  You now have ${claimBlocks(player)} available claim blocks.`)
+  player.sendMessage(`§a${messages.AbandonSuccess.replace("{0}", claimBlocks(player))}`)
 
   return {
     status: 0
