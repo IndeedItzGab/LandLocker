@@ -27,11 +27,11 @@ function permissionCheck(data, eventType) {
   
   if(!land ||
   land.owner?.toLowerCase() === player.name.toLowerCase() ||
-  (land.adminClaim && isAdmin) ||
+  (!land.owner && isAdmin) ||
   (player.hasTag("landlocker:ignoringClaims") && isAdmin)) return;
   
   const permissions = land.members.find(v => v.name.toLowerCase() === player.name.toLowerCase())?.permissions;
-  const ownerName = land.adminClaim ? messages.OwnerNameForAdminClaims : land.owner
+  const ownerName = !land.owner ? messages.OwnerNameForAdminClaims : land.owner
   const publicPermissions = land.publicPermissions
   const accessTrust = permissions?.accessTrust || false
   const containerTrust = permissions?.containerTrust || false
