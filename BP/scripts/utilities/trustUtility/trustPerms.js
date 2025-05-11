@@ -3,7 +3,7 @@ import * as db from "../storage.js"
 
 globalThis.updatePermissions = (land, targetName, type, player, isAllLands) => {
   const existingMember = land.members.find(m => m.name === targetName);
-  const ownerPermissions = land.members.find(v => v.name.toLowerCase() === land.owner.toLowerCase())
+  const ownerPermissions = land.members.find(v => v.name.toLowerCase() === land.owner?.toLowerCase())
 
   if(targetName.toLowerCase() === "all") {
     switch(type) {

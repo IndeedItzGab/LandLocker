@@ -28,7 +28,7 @@ registerCommand(commandInformation, (origin, radius = config.LandLocker.Claims.A
   
   const player = origin.sourceEntity
   const c = checkLand(player)
-  const isOwner = c?.owner.toLowerCase() === player.name.toLowerCase()
+  const isOwner = c.owner?.toLowerCase() === player.name.toLowerCase()
   const leftX = Math.round(player.location.x - radius);
   const rightX = Math.round(player.location.x + radius);
   const leftZ = Math.round(player.location.z - radius);

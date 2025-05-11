@@ -26,8 +26,9 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
   if(origin.sourceBlock || origin.initiator || origin.sourceEntity.typeId !== "minecraft:player") return { status: 1 }
   
   const player = origin.sourceEntity
+  const isAdmin = player.isOp() // CODE_ORANGE
   const c = checkLand(player)
-  const isOwner = c?.owner.toLowerCase() === player.name.toLowerCase()
+  const isOwner = c.owner?.toLowerCase() === player.name.toLowerCase() || (!c.owner && isAdmin)
   let lands = db.fetch("land", true)
   
   if(isOwner && !c) return player.sendMessage(`§c${messages.GrantPermissionNoClaim}`)
@@ -38,7 +39,7 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
     land.members = land.members || [];
     
     if(!isOwner) {
-      const playerLandData = land.members.find(v => v.name.toLowerCase() === player.name.toLowerCase() && land.owner.toLowerCase() !== player.name.toLowerCase())
+      const playerLandData = land.members.find(v => v.name.toLowerCase() === player.name.toLowerCase() && land.owner?.toLowerCase() !== player.name.toLowerCase())
       if(playerLandData?.permissions?.permissionTrust === false || !playerLandData) return player.sendMessage(`§c${messages.NoPermissionTrust.replace("{0}", land.owner)}`);
       if(!playerLandData?.permissions?.fullTrust) return player.sendMessage(`§c${messages.CantGrantThatPermission}`)
     }

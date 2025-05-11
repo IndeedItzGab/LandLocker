@@ -4,6 +4,7 @@ import { messages } from "../../messages.js"
 import "../../utilities/checkLand.js"
 import "../../utilities/claimBlocks.js"
 import "../../utilities/getTopBlock.js"
+import "../../utilities/visualization.js"
 import "../../utilities/overlapCheck.js"
 
 world.beforeEvents.playerBreakBlock.subscribe((e) => {
@@ -17,15 +18,22 @@ world.beforeEvents.playerInteractWithBlock.subscribe((e) => {
 function resize(event) {
   const player = event.player
   const block = event.block
+  const isAdmin = player.isOp() // CODE_ORANGE
   const editData = player.getTags().find(v => v.startsWith("editingLand:"))
   const usedItem = player?.getComponent("inventory")?.container?.getItem(player?.selectedSlotIndex)
   if(usedItem?.typeId !== "minecraft:golden_shovel") return;
   
-  let lands = db.fetch("land", true)|| []
+  let lands = db.fetch("land", true)
   
   lands.filter(data => {
-      // Replace the old land size
-    if(data?.owner.toLowerCase() === player.name.toLowerCase() && data?.id === editData?.split(':')[1]) {
+    const isOwner = data.owner?.toLowerCase() === player.name.toLowerCase();
+
+if (!isOwner && (!data.owner || (!data.owner && !isAdmin))) {
+  return true; // deny access
+}
+    
+    // Replace the old land size
+    if(data?.id === editData?.split(':')[1]) {
       event.cancel = true
       if(data.bounds.rx <= block.location.x && editData.split(':')[2] === "true") {
         data.bounds.lx = data.bounds.rx;
@@ -54,99 +62,43 @@ function resize(event) {
       system.run(() => {
         player.removeTag(editData);
       })
+      
       // Check if the player have enough claim blocks.
       const permutationClaimBlocks = claimBlocks(player, data.id) - (Math.abs(data.bounds.rx - data.bounds.lx) + 1) * (Math.abs(data.bounds.rz - data.bounds.lz) + 1)
-      if(permutationClaimBlocks < 0) return player.sendMessage(`§c${messages.ResizeNeedMoreBlocks.replace("{0}", Math.abs(permutationClaimBlocks))}`)
+      if(permutationClaimBlocks < 0 && data.owner) return player.sendMessage(`§c${messages.ResizeNeedMoreBlocks.replace("{0}", Math.abs(permutationClaimBlocks))}`)
       
       // If it overlaps with other claim then it stop updating the land size.
       const overlap = overlapCheck(player, data.bounds.lx, data.bounds.rx, data.bounds.lz, data.bounds.rz, data.id)
       if(overlap && overlap?.id !== data.id) return player.sendMessage(`§c${messages.ResizeFailOverlap}`) // Self-made message
       
-//      const corners = [
-//         { x: data.bounds.lx, z: data.bounds.rz, y: getTopBlock({x: data.bounds.lx, z: data.bounds.rz}), type: "glowstone" },
-//         { x: data.bounds.lx, z: data.bounds.rz - 1, y: getTopBlock({x: data.bounds.lx, z: data.bounds.rz - 1}), type: "gold_block" },
-//         { x: data.bounds.lx + 1, z: data.bounds.rz, y: getTopBlock({x: data.bounds.lx + 1, z: data.bounds.rz}), type: "gold_block" },
-//         { x: data.bounds.lx, z: data.bounds.lz, y: getTopBlock({x: data.bounds.lx, z: data.bounds.lz}), type: "glowstone" },
-//         { x: data.bounds.lx + 1, z: data.bounds.lz, y: getTopBlock({x: data.bounds.lx + 1, z: data.bounds.lz}), type: "gold_block" },
-//         { x: data.bounds.lx, z: data.bounds.lz + 1, y: getTopBlock({x: data.bounds.lx, z: data.bounds.lz + 1}), type: "gold_block" },
-//         { x: data.bounds.rx, z: data.bounds.rz, y: getTopBlock({x: data.bounds.rx, z: data.bounds.rz}), type: "glowstone" },
-//         { x: data.bounds.rx, z: data.bounds.rz - 1, y: getTopBlock({x: data.bounds.rx, z: data.bounds.rz - 1}), type: "gold_block" },
-//         { x: data.bounds.rx - 1, z: data.bounds.rz, y: getTopBlock({x: data.bounds.rx - 1, z: data.bounds.rz}), type: "gold_block" },
-//         { x: data.bounds.rx, z: data.bounds.lz, y: getTopBlock({x: data.bounds.rx, z: data.bounds.lz}), type: "glowstone" },
-//         { x: data.bounds.rx - 1, z: data.bounds.lz, y: getTopBlock({x: data.bounds.rx - 1, z: data.bounds.lz}), type: "gold_block" },
-//         { x: data.bounds.rx, z: data.bounds.lz + 1, y: getTopBlock({x: data.bounds.rx, z: data.bounds.lz + 1}), type: "gold_block" },
-//       ];
-      const cornerOffsets = [
-        { dx: 0, dz: 0, type: "glowstone" },
-        { dx: 1, dz: 0, type: "gold_block" },
-        { dx: 0, dz: 1, type: "gold_block" }
-      ];
-      
-      const baseCorners = [
-        { x: data.bounds.lx, z: data.bounds.rz },
-        { x: data.bounds.lx, z: data.bounds.lz },
-        { x: data.bounds.rx, z: data.bounds.lz },
-        { x: data.bounds.rx, z: data.bounds.rz }
-      ];
-      
-      let corners = [];
-      
-      // Responsible for setting up the corner part of the land
-      for (const base of baseCorners) {
-        for (const offset of cornerOffsets) {
-          const x = base.x + offset.dx * (base.x === data.bounds.rx ? -1 : 1);
-          const z = base.z + offset.dz * (base.z === data.bounds.rz ? -1 : 1);
-          const y = getTopBlock({ x, z });
-          corners.push({ x, y, z, type: offset.type });
-        }
-      }
-      
-      // Responsible for in-between edit blocks
-      for (let i = 0; i < baseCorners.length; i++) {
-        const current = baseCorners[i];
-        const next = baseCorners[(i + 1) % baseCorners.length];
-        
-        if (current.x === next.x) {
-          const step = current.z < next.z ? 10 : -10;
-          for (let z = current.z; step > 0 ? z <= next.z : z >= next.z; z += step) {
-            const remaining = Math.abs(next.z - z);
-            if (remaining >= 6) {
-              const y = getTopBlock({ x: current.x, z });
-              if(z === current.z) continue
-              corners.push({ x: current.x, y, z, type: "gold_block" });
-            }
-          }
-        } else if (current.z === next.z) {
-          const step = current.x < next.x ? 10 : -10;
-          for (let x = current.x; step > 0 ? x <= next.x : x >= next.x; x += step) {
-            const remaining = Math.abs(next.x - x);
-            if (remaining >= 6) {
-              const y = getTopBlock({ x, z: current.z });
-              if(x === current.x) continue
-              corners.push({ x, y, z: current.z, type: "gold_block" });
-            }
-          }
-        }
-      }
-
-      
-      const blocks = db.fetch(`landCacheBlocks:${player.name.toLowerCase()}`, true) || []
+      const secondaryBlock = !data.owner ? "landlocker:admin_secondary_block" : "landlocker:basic_secondary_block"
+      const corners = visualization("landlocker:basic_primary_block", secondaryBlock, data)
+      const blocks = db.fetch(`landCacheBlocks:${!data.owner ? "admin" : player.name.toLowerCase()}`, true) || []
       let updateCacheBlocksData = []
+      
+      // Remove the old outline
       for(const cacheBlock of blocks) {
         const block = player.dimension.getBlock({x: cacheBlock.location.x, y: cacheBlock.location.y, z: cacheBlock.location.z})
-        if(corners.some(pos => pos.x === cacheBlock.location.x && pos.z === cacheBlock.location.z && pos.y === cacheBlock.location.y && pos.temporaryBlock === cacheBlock.temporaryBlock)) continue;
+        const specifiedCornerData = corners.find(pos => pos.x === cacheBlock.location.x && pos.y === cacheBlock.location.y && pos.z === cacheBlock.location.z)
+        const specifiedBlock = specifiedCornerData
+          ? specifiedCornerData.type !== cacheBlock.temporaryBlock ? specifiedCornerData.type : cacheBlock.temporaryBlock
+          : cacheBlock.originalBlock;
+          
         system.run(() => {
-          block?.setType(cacheBlock.originalBlock)
+         block.setType(specifiedBlock)
         })
-        //updateCacheBlocksData = blocks.filter(data => data.location.x !== cacheBlock.location.x && data.location.y !== cacheBlock.location.y && data.location.z !== cacheBlock.location.z)
+        
+        if(!specifiedCornerData) continue
         updateCacheBlocksData.push(cacheBlock)
       }
       
       // Update cache blocks that shows when you hold golden shovel.
       for(const pos of corners) {
         const block = player.dimension.getBlock({x: pos.x, y: pos.y, z: pos.z})
-        if(block?.typeId === "minecraft:gold_block" || block?.typeId === "minecraft:glowstone") continue;
-        const currentOriginalBlock = updateCacheBlocksData.find(block => block.location.x === pos.x && block.location.z === pos.z && block.location.y === pos.y)?.originalBlock || block?.typeId
+        //if(block?.typeId.includes("landlocker:")) continue
+        //if(playerCacheBlocks.some(d => d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z)) continue;
+        const shovelCacheBlock = db.fetch("shovelClaimCacheBlock", true)?.find(b => b.location.x === pos.x && b.location.y === pos.y && b.location.z === pos.z)?.originalBlock
+        const currentOriginalBlock = updateCacheBlocksData.find(b => b.location.x === pos.x && b.location.y === pos.y && b.location.z === pos.z)?.originalBlock || shovelCacheBlock?.originalBlock ||block?.typeId
         updateCacheBlocksData.push({
           owner: player.name.toLowerCase(),
           landId: data.id,
@@ -155,12 +107,12 @@ function resize(event) {
           location: { x: pos.x, y: pos.y, z: pos.z}
         })
         system.run(() => {
-          block?.setType(`minecraft:${pos.type}`)
+          block?.setType(pos.type)
         })
       }
-      db.store(`landCacheBlocks:${player.name.toLowerCase()}`, updateCacheBlocksData)
+      db.store(`landCacheBlocks:${!data.owner ? "admin" : player.name.toLowerCase()}`, updateCacheBlocksData)
       db.store("land", lands)
-      player.sendMessage(`§e${messages.ClaimResizeSuccess.replace("{0}", claimBlocks(player))}`)
+      player.sendMessage(`§e${messages.ClaimResizeSuccess.replace("{0}", !data.owner ? 0 : claimBlocks(player))}`)
       return true; // Return to make it won't declare another side to be adjusted.
     }
     

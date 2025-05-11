@@ -1,115 +1,57 @@
 import { world, system } from "@minecraft/server"
 import * as db from "../../utilities/storage.js" 
 import "../../utilities/getTopBlock.js"
+import "../../utilities/visualization.js"
+import { messages } from "../../messages.js"
 
 system.runInterval(() => {
   [...world.getPlayers()].forEach(player => {
+    // Declaring Variables
     const inv = player.getComponent("inventory").container
     const heldItem = inv.getItem(player.selectedSlotIndex)
-    const land = (db.fetch("land", true) || []).filter(data => data.owner.toLowerCase() === player.name.toLowerCase())
+    const isAdmin = player.isOp() // CODE_ORANGE
+    const lands = db.fetch("land", true)
+    const adminClaim = lands.filter(data => data.owner === null && !data.owner && isAdmin)
+    const land = lands.filter(data => data.owner?.toLowerCase() === player.name.toLowerCase()).concat(adminClaim)
     const dimension = player.dimension
-    const allCacheBlocks = world.scoreboard.getObjectives().filter(data => data.id.includes("landCacheBlocks:"))
+    const allCacheBlocks = db.find(`landCacheBlocks:`)//world.scoreboard.getObjectives().filter(data => data.id.includes("landCacheBlocks:"))
     
     // Responsible for removing the edit blocks once the owner of the land no longer hold a golden shovel
     for(const cache of allCacheBlocks) {
-      const cachePlayer = [...world.getPlayers()].find(data => data.name.toLowerCase() === cache.id.replace("landCacheBlocks:", ''))
+      const cachePlayer = [...world.getPlayers()].find(data => data.name.toLowerCase() === cache.split(':')[1])
       const inv = cachePlayer?.getComponent("inventory")?.container
       const heldItem = inv?.getItem(cachePlayer?.selectedSlotIndex)
-      if(heldItem?.typeId === "minecraft:golden_shovel") continue;
-      
-      let allPlayerCacheBlocks = db.fetch(`${cache.id}`, true)
+      if(heldItem?.typeId === "minecraft:golden_shovel" ||
+      (cache.split(':')[1] ==="admin" && world.getPlayers().some(d => (
+        d.isOp() &&
+        d.getComponent("inventory")?.container.getItem(d.selectedSlotIndex)?.typeId === "minecraft:golden_shovel"
+      )))) continue;
+      let allPlayerCacheBlocks = db.fetch(cache, true)
       let blocksToBeRemoved = [];
       
       for(const cacheBlock of allPlayerCacheBlocks) {
-        // Just remove the cache block if it's already undefine
-        if(cacheBlock?.originalBlock === undefined) {
-          blocksToBeRemoved.push(cacheBlock);
-          continue;
-        }
+        if(typeof cacheBlock?.originalBlock === "undefined") continue
         const block = dimension.getBlock({x: cacheBlock.location.x, y: cacheBlock.location.y, z: cacheBlock.location.z})
         block?.setType(cacheBlock.originalBlock)
-        if(block) blocksToBeRemoved.push(cacheBlock)
-        //\\ if(block) playerCacheBlocks = playerCacheBlocks.filter(data => data.location.x !== cacheBlock.location.x && data.location.y !== cacheBlock.location.y && data.location.z !== cacheBlock.location.z)
+          
+        // Make sure that it is updated before removing the block from cache data
+        const updatedBlock = dimension.getBlock(block.location)
+        if(updatedBlock && updatedBlock?.typeId === cacheBlock?.originalBlock) {
+          blocksToBeRemoved.push(cacheBlock)
+        }
       }
       allPlayerCacheBlocks = allPlayerCacheBlocks.filter(data => !blocksToBeRemoved.includes(data))
-      db.store(cache.id, allPlayerCacheBlocks)
+      db.store(cache, allPlayerCacheBlocks)
     }
     
+    let adminCacheBlocks = db.fetch(`landCacheBlocks:admin`, true)
     let playerCacheBlocks = db.fetch(`landCacheBlocks:${player.name.toLowerCase()}`, true)
     if(heldItem?.typeId === "minecraft:golden_shovel") {
       for(const data of land) {
+        let cache = !data.owner ? adminCacheBlocks : playerCacheBlocks
         // Declaring all corners location
-        // const corners = [
-//           { x: data.bounds.lx, z: data.bounds.rz, y: getTopBlock({x: data.bounds.lx, z: data.bounds.rz}), type: "glowstone"},
-//           { x: data.bounds.lx, z: data.bounds.rz - 1, y: getTopBlock({x: data.bounds.lx, z: data.bounds.rz - 1}), type: "gold_block" },
-//           { x: data.bounds.lx + 1, z: data.bounds.rz, y: getTopBlock({x: data.bounds.lx + 1, z: data.bounds.rz}), type: "gold_block" },
-//   
-//           { x: data.bounds.lx, z: data.bounds.lz, y: getTopBlock({x: data.bounds.lx, z: data.bounds.lz}), type: "glowstone" },
-//           { x: data.bounds.lx + 1, z: data.bounds.lz, y: getTopBlock({x: data.bounds.lx + 1, z: data.bounds.lz}), type: "gold_block" },
-//           { x: data.bounds.lx, z: data.bounds.lz + 1, y: getTopBlock({x: data.bounds.lx, z: data.bounds.lz + 1}), type: "gold_block" },
-//   
-//           { x: data.bounds.rx, z: data.bounds.rz, y: getTopBlock({x: data.bounds.rx, z: data.bounds.rz}), type: "glowstone" },
-//           { x: data.bounds.rx, z: data.bounds.rz - 1, y: getTopBlock({x: data.bounds.rx, z: data.bounds.rz - 1}), type: "gold_block" },
-//           { x: data.bounds.rx - 1, z: data.bounds.rz, y: getTopBlock({x: data.bounds.rx - 1, z: data.bounds.rz}), type: "gold_block" },
-//   
-//           { x: data.bounds.rx, z: data.bounds.lz, y: getTopBlock({x: data.bounds.rx, z: data.bounds.lz}), type: "glowstone" },
-//           { x: data.bounds.rx - 1, z: data.bounds.lz, y: getTopBlock({x: data.bounds.rx - 1, z: data.bounds.lz}), type: "gold_block" },
-//           { x: data.bounds.rx, z: data.bounds.lz + 1, y: getTopBlock({x: data.bounds.rx, z: data.bounds.lz + 1}), type: "gold_block" }
-//         ]
-
-        
-        
-        const cornerOffsets = [
-          { dx: 0, dz: 0, type: "glowstone" },
-          { dx: 1, dz: 0, type: "gold_block" },
-          { dx: 0, dz: 1, type: "gold_block" }
-        ];
-        
-        const baseCorners = [
-          { x: data.bounds.lx, z: data.bounds.rz },
-          { x: data.bounds.lx, z: data.bounds.lz },
-          { x: data.bounds.rx, z: data.bounds.lz },
-          { x: data.bounds.rx, z: data.bounds.rz }
-        ];
-        
-        let corners = [];
-        
-        // Responsible for setting up the corner part of the land
-        for (const base of baseCorners) {
-          for (const offset of cornerOffsets) {
-            const x = base.x + offset.dx * (base.x === data.bounds.rx ? -1 : 1);
-            const z = base.z + offset.dz * (base.z === data.bounds.rz ? -1 : 1);
-            const y = getTopBlock({ x, z });
-        
-            corners.push({ x, y, z, type: offset.type });
-          }
-        }
-        
-        // Responsible for in-between edit blocks
-        for (let i = 0; i < baseCorners.length; i++) {
-          const current = baseCorners[i];
-          const next = baseCorners[(i + 1) % baseCorners.length];
-        
-          if (current.x === next.x) {
-            const step = current.z < next.z ? 10 : -10;
-            for (let z = current.z; step > 0 ? z <= next.z : z >= next.z; z += step) {
-              const remaining = Math.abs(next.z - z);
-              if (remaining >= 6) {
-                const y = getTopBlock({ x: current.x, z });
-                corners.push({ x: current.x, y, z, type: "gold_block" });
-              }
-            }
-          } else if (current.z === next.z) {
-            const step = current.x < next.x ? 10 : -10;
-            for (let x = current.x; step > 0 ? x <= next.x : x >= next.x; x += step) {
-              const remaining = Math.abs(next.x - x);
-              if (remaining >= 6) {
-                const y = getTopBlock({ x, z: current.z });
-                corners.push({ x, y, z: current.z, type: "gold_block" });
-              }
-            }
-          }
-        }
+        const secondaryBlock = !data.owner ? "landlocker:admin_secondary_block" : "landlocker:basic_secondary_block"
+        const corners = visualization("landlocker:basic_primary_block", secondaryBlock, data)
         
         let isCurrentlyOverlapState = db.fetch(`overlapCacheBlocks:${data.id}`, true)
         
@@ -117,28 +59,64 @@ system.runInterval(() => {
         for(const pos of corners) {
           const block = dimension.getBlock({x: pos.x, y: pos.y, z: pos.z})
           // Avoid outline blocks (aka edit blockd) to be permanently implemented to the world.
-          if(playerCacheBlocks.find(d => d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z)) continue;
+          if(cache.some(d => d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z)) continue;
+          
+          // If the land's outline is currently in overlapping state that was trigger by someone/you then it will ignore the current block-
+          // and get the original block from the overlap cache data
           let currentOverlapBlock = isCurrentlyOverlapState.find(d => d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z)
           isCurrentlyOverlapState = isCurrentlyOverlapState.filter(d => !(d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z))
-          playerCacheBlocks.push({
+          
+          // Push the new cache data
+          cache.push({
             owner: player.name.toLowerCase(),
             landId: data.id,
             originalBlock: currentOverlapBlock?.originalBlock || block?.typeId,
             temporaryBlock: pos.type,
             location: { x: pos.x, y: pos.y, z: pos.z}
           })
-          block?.setType(`minecraft:${pos.type}`)
+          block?.setType(pos.type)
         }
         db.store(`overlapCacheBlocks:${data.id}`, isCurrentlyOverlapState)
-        db.store(`landCacheBlocks:${player.name.toLowerCase()}`, playerCacheBlocks)
+        db.store(`landCacheBlocks:${!data.owner ? "admin" : player.name.toLowerCase()}`, cache)
       }
     } else {
+      // This codes run if the player don't hold golden shovel
+      
+      // Declaring variables
+      const claimTag = player.getTags().find(d => d.includes("shovelClaim:"))
       const editData = player.getTags().find(v => v.startsWith("editingLand:"))
+      const adminTag = player.hasTag("shovelMode:adminClaims")
+      
+      // Remove admin mode
+      if(adminTag) {
+        system.run(() => {
+          player.removeTag("shovelMode:adminClaims")
+          player.sendMessage(`§b${messages.ShovelBasicClaimMode}`)
+        })
+      }
+      
+      // Remove edit data that is for resizing the claim
       if(editData) {
         system.run(() => {
           player.removeTag(editData)
         })
       };
+      
+      // Remove claim data that is for claiming a land vai golden shovel
+      if(claimTag) {
+        system.run(() => {
+          player.removeTag(claimTag)
+        })
+        let shovelCacheBlock = db.fetch("shovelClaimCacheBlock", true).find(d => d.owner === player.name.toLowerCase())
+        const block = world.getDimension(`${shovelCacheBlock?.world}`)?.getBlock({x: shovelCacheBlock.location.x, y: shovelCacheBlock.location.y, z: shovelCacheBlock.location.z})
+        if(block) {
+          system.run(() => {
+            block?.setType(shovelCacheBlock?.originalBlock)
+            shovelCacheBlock = db.fetch("shovelClaimCacheBlock", true).filter(d => !(d.location.x === shovelCacheBlock.location.x && d.location.y === shovelCacheBlock.location.y && d.location.z === shovelCacheBlock.location.z && d.owner === shovelCacheBlock.owner))
+            db.store("shovelClaimCacheBlock", shovelCacheBlock)
+          })
+        }
+      }
     }
   })
 }, 20)

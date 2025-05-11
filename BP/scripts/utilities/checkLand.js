@@ -8,7 +8,8 @@ globalThis.checkLand = (player) => {
       player.location.x >= data.bounds.lx &&
       player.location.x <= data.bounds.rx &&
       player.location.z >= data.bounds.lz &&
-      player.location.z <= data.bounds.rz
+      player.location.z <= data.bounds.rz &&
+      player.dimension.id === data.world
     ) {
       return data;
     }

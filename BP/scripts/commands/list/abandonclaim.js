@@ -16,11 +16,10 @@ const commandInformation = {
 }
 
 registerCommand(commandInformation, (origin) => {
-  
 
   const player = origin.sourceEntity
   const c = checkLand(player)
-  const isOwner = c?.owner.toLowerCase() === player.name.toLowerCase()
+  const isOwner = c?.owner?.toLowerCase() === player.name.toLowerCase()
 
   if(!isOwner) return player.sendMessage(`§e${messages.AbandonClaimMissing}`)
   db.store("land", db.fetch("land", true).filter(data => data.id !== c?.id && data.owner === player.name.toLowerCase()));

@@ -11,9 +11,10 @@ These commands are meant to be use by anyone with or without the permission leve
 |accesstrust          |at                     |\<player\>              |Gives a player permission to use your buttons, levers, and beds.       |
 |permissiontrust      |pt                     |\<player\>              |Grants a player permission to share his permission level with others.  |
 |untrust              |                       |\<player\>              |Revokes any permissions granted to a player in your claim.             |
-|claimlist            |                       |                        |Lists a player’s claims and claim block details.                       |
+|claimlist            |                       |\<player\>              |Lists a player’s claims and claim block details.                       |
 |trustlist            |                       |                        |Lists the permissions for the claim you’re standing in.                |
 |claimexplosion       |claimexplosions        |                        |Toggles whether explosives may be used in specific land claim.         |
+|basicclaims          |bc                     |                        |Puts your shovel back in basic claims mode.                            |
 
 ## Operator/Admin Commands
 These commands are meant to be use by operators and cannot be accessible by non-operators.
@@ -24,3 +25,8 @@ These commands are meant to be use by operators and cannot be accessible by non-
 |setaccruedclaimblocks     |scb                    |\<player\> \<count\>    |Updates a player’s accrued claim block total.                          |
 |deleteclaim               |dl                     |                        |Deletes the claim you’re standing in, even if it’s not your claim.     |
 |deleteallclaims           |                       |\<player\>              |Deletes all of another player’s claims.                                |
+|adminclaims               |ac                     |                        |Switches the shovel tool to administrative claims mode.                |
+|adminclaimslist           |                       |                        |Lists all administrative claims.                                       |
+|deletealladminclaims      |                       |                        |Deletes all administrative claims.                                     |
+|transferclaim             |                       |\<player\>              |Converts an administrative claim to a private claim.                   |
+|ignoreclaims              |ic                     |                        |Toggles ignore claims mode.                                            |

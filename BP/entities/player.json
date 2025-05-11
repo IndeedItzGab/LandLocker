@@ -54,7 +54,7 @@
                     "test": "is_family",
                     "subject": "other",
                     "value": "player"
-                  }
+                  },
                   {
                     "test": "has_tag",
                     "subject": "self",

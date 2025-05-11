@@ -1,0 +1,3 @@
+LandLocker V1.0.1
+- I am expecting some changes on detecting players with Operator permission. Therefore, .isOp() will be replaced in the near future update.
+- All expected field changes will be marked as "CODE_ORANGE". With this, searching would be easier and faster.

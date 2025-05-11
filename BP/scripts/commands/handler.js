@@ -11,6 +11,7 @@ import "./list/accesstrust.js"
 import "./list/permissiontrust.js"
 import "./list/untrust.js"
 import "./list/claimexplosions.js"
+import "./list/basicclaims.js"
 
 // Admin Commands
 import "./list/adminCommands/deleteclaim.js"
@@ -18,5 +19,10 @@ import "./list/adminCommands/deleteallclaims.js"
 import "./list/adminCommands/setaccruedclaimblocks.js"
 import "./list/adminCommands/adjustbonusclaimblocks.js"
 import "./list/adminCommands/adjustbonusclaimblocksall.js"
+import "./list/adminCommands/adminclaims.js"
+import "./list/adminCommands/deletealladminclaims.js"
+import "./list/adminCommands/adminclaimslist.js"
+import "./list/adminCommands/transferclaim.js"
+import "./list/adminCommands/ignoreclaims.js"
 
 // Progress Command - means it's not finished.

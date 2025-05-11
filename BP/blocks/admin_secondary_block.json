@@ -1,0 +1,47 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:block": {
+    "description": {
+      "identifier": "landlocker:admin_secondary_block"
+    },
+    "components": {
+      "tag:sand": {},
+      "tag:dirt": {},
+      "tag:plant": {},
+      "tag:crop": {},
+      "tag:grass": {},
+      "tag:fertilize_area": {},
+      "minecraft:destructible_by_mining": false,
+      "minecraft:destructible_by_explosion": false,
+      "minecraft:loot": "loot_tables/empty.json",
+      "minecraft:geometry": "minecraft:geometry.full_block",
+      "minecraft:collision_box": true,
+      "minecraft:material_instances": {
+        "up": {
+          "texture": "pumpkin_top",
+          "render_method": "opaque"
+        },
+        "down": {
+          "texture": "pumpkin_top",
+          "render_method": "opaque"
+        },
+        "north": {
+          "texture": "pumpkin_side",
+          "render_method": "opaque"
+        },
+        "south": {
+          "texture": "pumpkin_side",
+          "render_method": "opaque"
+        },
+        "east": {
+          "texture": "pumpkin_side",
+          "render_method": "opaque"
+        },
+        "west": {
+          "texture": "pumpkin_side",
+          "render_method": "opaque"
+        }
+      }
+    } // Must be here, even if empty!
+  }
+}
