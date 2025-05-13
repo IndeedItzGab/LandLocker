@@ -35,7 +35,7 @@ system.runInterval(() => {
         block?.setType(cacheBlock.originalBlock)
           
         // Make sure that it is updated before removing the block from cache data
-        const updatedBlock = dimension.getBlock(block.location)
+        const updatedBlock = block ? dimension.getBlock(block?.location) : null
         if(updatedBlock && updatedBlock?.typeId === cacheBlock?.originalBlock) {
           blocksToBeRemoved.push(cacheBlock)
         }

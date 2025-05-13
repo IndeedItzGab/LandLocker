@@ -28,9 +28,9 @@ function resize(event) {
   lands.filter(data => {
     const isOwner = data.owner?.toLowerCase() === player.name.toLowerCase();
 
-if (!isOwner && (!data.owner || (!data.owner && !isAdmin))) {
-  return true; // deny access
-}
+    if (!isOwner && (!data.owner && !isAdmin))7 {
+      return true; // deny access
+    }
     
     // Replace the old land size
     if(data?.id === editData?.split(':')[1]) {
@@ -85,10 +85,10 @@ if (!isOwner && (!data.owner || (!data.owner && !isAdmin))) {
           : cacheBlock.originalBlock;
           
         system.run(() => {
-         block.setType(specifiedBlock)
+          specifiedBlock ? block?.setType(specifiedBlock) : null
         })
         
-        if(!specifiedCornerData) continue
+        //if(!specifiedCornerData) continue
         updateCacheBlocksData.push(cacheBlock)
       }
       
