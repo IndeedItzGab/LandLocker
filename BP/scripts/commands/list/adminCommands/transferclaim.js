@@ -29,7 +29,7 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
   let landPlayersList = db.fetch("landPlayersList", true)
   let targetPlayerData = landPlayersList.find(data => data.name.toLowerCase() === targetPlayerName.toLowerCase())
   if(!c) return player.sendMessage(`§c${messages.TransferClaimMissing}`)
-  if(c.owner) return player.sendMessage(`§c${messages.TransferClaimAdminOnly}`)
+  if(c?.owner) return player.sendMessage(`§c${messages.TransferClaimAdminOnly}`)
   if(!targetPlayerData) return player.sendMessage(`§c${messages.PlayerNotFound2}`)
   
   const lands = db.fetch("land", true)

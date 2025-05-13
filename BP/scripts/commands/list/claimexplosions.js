@@ -24,7 +24,7 @@ registerCommand(commandInformation, (origin, args1) => {
 
   const player = origin.sourceEntity
   const c = checkLand(player)
-  const isOwner = c.owner?.toLowerCase() === player.name.toLowerCase()
+  const isOwner = c?.owner?.toLowerCase() === player.name.toLowerCase()
   let lands = db.fetch("land", true)
   if(!c || !isOwner) return player.sendMessage(`§c${messages.DeleteClaimMissing}`)
   player.sendMessage(`§a${!c.setting.allowExplosions ? messages.ExplosivesEnabled : messages.ExplosivesDisabled}`)
