@@ -28,7 +28,7 @@ function resize(event) {
   lands.filter(data => {
     const isOwner = data.owner?.toLowerCase() === player.name.toLowerCase();
 
-    if (!isOwner && (!data.owner && !isAdmin))7 {
+    if (!isOwner && (!data.owner && !isAdmin)) {
       return true; // deny access
     }
     
