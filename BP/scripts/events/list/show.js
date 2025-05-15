@@ -9,7 +9,7 @@ system.runInterval(() => {
     // Declaring Variables
     const inv = player.getComponent("inventory").container
     const heldItem = inv.getItem(player.selectedSlotIndex)
-    const isAdmin = player.isOp() // CODE_ORANGE
+    const isAdmin = player.isAdmin() // CODE_ORANGE
     const lands = db.fetch("land", true)
     const adminClaim = lands.filter(data => data.owner === null && !data.owner && isAdmin)
     const land = lands.filter(data => data.owner?.toLowerCase() === player.name.toLowerCase()).concat(adminClaim)
@@ -23,7 +23,7 @@ system.runInterval(() => {
       const heldItem = inv?.getItem(cachePlayer?.selectedSlotIndex)
       if(heldItem?.typeId === "minecraft:golden_shovel" ||
       (cache.split(':')[1] ==="admin" && world.getPlayers().some(d => (
-        d.isOp() &&
+        d.isAdmin() &&
         d.getComponent("inventory")?.container.getItem(d.selectedSlotIndex)?.typeId === "minecraft:golden_shovel"
       )))) continue;
       let allPlayerCacheBlocks = db.fetch(cache, true)

@@ -10,13 +10,14 @@ const commandInformation = {
   name: "ignoreclaims",
   description: "Toggles ignore claims mode.",
   aliases: ["ic"],
-  permissionLevel: 2,
   usage:[]
 }
 
 registerCommand(commandInformation, (origin) => {
   
   const player = origin.sourceEntity
+  if(!player.isAdmin()) return player.sendMessage(`§c${messages.TransferClaimPermission}`)
+
   const statusTag = player.hasTag("landlocker:ignoringClaims")
   system.run(() => {
     statusTag ? player.removeTag("landlocker:ignoringClaims") : player.addTag("landlocker:ignoringClaims")

@@ -25,7 +25,7 @@ const commandInformation = {
 registerCommand(commandInformation, (origin, targetPlayerName) => {
 
   const player = origin.sourceEntity
-  const isAdmin = player.isOp() // CODE_ORANGE
+  const isAdmin = player.isAdmin() // CODE_ORANGE
   const c = checkLand(player)
   const isOwner = c?.owner?.toLowerCase() === player.name.toLowerCase() || (!c?.owner && isAdmin)
   let lands = db.fetch("land", true)

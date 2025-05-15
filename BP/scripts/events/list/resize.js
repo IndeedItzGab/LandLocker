@@ -18,7 +18,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((e) => {
 function resize(event) {
   const player = event.player
   const block = event.block
-  const isAdmin = player.isOp() // CODE_ORANGE
+  const isAdmin = player.isAdmin() // CODE_ORANGE
   const editData = player.getTags().find(v => v.startsWith("editingLand:"))
   const usedItem = player?.getComponent("inventory")?.container?.getItem(player?.selectedSlotIndex)
   if(usedItem?.typeId !== "minecraft:golden_shovel") return;

@@ -11,7 +11,6 @@ const commandInformation = {
   name: "transferclaim",
   description: "Converts an administrative claim to a private claim.",
   aliases: [],
-  permissionLevel: 2,
   usage:[
     {
       name: "player",
@@ -26,6 +25,7 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
 
   const player = origin.sourceEntity
   const c = checkLand(player)
+  if(!player.isAdmin()) return player.sendMessage(`§c${messages.TransferClaimPermission}`)
   let landPlayersList = db.fetch("landPlayersList", true)
   let targetPlayerData = landPlayersList.find(data => data.name.toLowerCase() === targetPlayerName.toLowerCase())
   if(!c) return player.sendMessage(`§c${messages.TransferClaimMissing}`)

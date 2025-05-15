@@ -21,7 +21,7 @@ world.beforeEvents.playerInteractWithEntity.subscribe((e) => {
 // This handle the process for checking if player can/can't do a certain event.
 function permissionCheck(data, eventType) {
   const player = data.player;
-  const isAdmin = player.isOp() // CODE_ORANGE
+  const isAdmin = player.isAdmin() // CODE_ORANGE
   const blockEntity = data.block || data.target;
   const land = checkLand(blockEntity);
   

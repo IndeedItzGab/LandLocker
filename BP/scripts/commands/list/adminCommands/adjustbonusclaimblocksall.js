@@ -10,7 +10,6 @@ const commandInformation = {
   name: "adjustbonusclaimblockall",
   description: "Adds or subtracts bonus claim blocks for all online players.",
   aliases: [],
-  permissionLevel: 2,
   usage:[
     {
       name: "count",
@@ -23,6 +22,7 @@ const commandInformation = {
 registerCommand(commandInformation, (origin, count) => {
   
   const player = origin.sourceEntity
+  if(!player.isAdmin()) return player.sendMessage(`§c${messages.TransferClaimPermission}`)
 
   let landPlayersList = db.fetch("landPlayersList", true)
   world.getPlayers().forEach(targetPlayer => {

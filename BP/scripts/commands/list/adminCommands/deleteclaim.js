@@ -11,7 +11,6 @@ const commandInformation = {
   name: "deleteclaim",
   description: "Deletes the claim you're standing in, even if it's not your claim.",
   aliases: ["dl"],
-  permissionLevel: 2,
   usage:[]
 }
 
@@ -19,6 +18,8 @@ registerCommand(commandInformation, (origin) => {
   
   
   const player = origin.sourceEntity
+  if(!player.isAdmin()) return player.sendMessage(`§c${messages.TransferClaimPermission}`)
+
   const c = checkLand(player)
 
   if(!c) return player.sendMessage(`§c${messages.DeleteClaimMissing}`)

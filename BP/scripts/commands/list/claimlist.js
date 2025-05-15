@@ -24,7 +24,6 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
   
 
   const player = origin.sourceEntity
-  
   const lands = db.fetch("land", true).filter(v => v.owner?.toLowerCase() === player.name.toLowerCase());
   const target = targetPlayerName?.toLowerCase() || player.name?.toLowerCase()
   const playerStatus = db.fetch("landPlayersList", true).find(data => data?.name.toLowerCase() === target)
