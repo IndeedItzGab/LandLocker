@@ -1,4 +1,4 @@
-globalThid.untrustPermission = (land, targetName, player, isAllLands) => {
+globalThis.untrustPermission = (land, targetName, player, isAllLands) => {
   if(targetName.toLowerCase() === "all" || targetName.toLowerCase() === "public") {
     land.publicPermissions.fullTrust = false
     land.publicPermissions.accessTrust = false
