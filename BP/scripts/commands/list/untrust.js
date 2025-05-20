@@ -5,6 +5,7 @@ import {
 import { registerCommand }  from "../commandRegistry.js"
 import * as db from "../../utilities/storage.js"
 import { messages } from "../../messages.js"
+import "../../utilities/trustUtility/untrustPerms.js"
 import "../../utilities/checkLand.js"
 
 const commandInformation = {
