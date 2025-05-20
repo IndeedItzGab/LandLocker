@@ -14,7 +14,9 @@ export const config = {
       Max_Accrued_Claim_Blocks: {
         Default: 80000
       },
-      AutomaticNewPlayerClaimsRadius: 4
+      AutomaticNewPlayerClaimsRadius: 4,
+      MinSize: 10 // 10 × 10 = 100 Minimum Claim blocks must used in a claim. To let anyone make a small claims set it to 1
+      MinWide: 5
     }
   }
 }

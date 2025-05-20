@@ -1,6 +1,7 @@
 import { world, system } from "@minecraft/server"
 import * as db from "../../utilities/storage.js" 
 import { messages } from "../../messages.js"
+import { config } from "../../config.js"
 import "../../utilities/overlapCheck.js"
 import "../../utilities/getTopBlock.js"
 import "../../utilities/claimBlocks.js"
@@ -85,8 +86,8 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     }
     
     if(permutationClaimBlocks < 0 && !isAdminMode) return player.sendMessage(`§c${messages.CreateClaimInsufficientBlocks.replace("{0}", Math.abs(permutationClaimBlocks))}`)
-    if((((Math.abs(rightX - leftX) + 1) * (Math.abs(rightZ- leftZ) + 1)) < 100) && !isAdminMode) return player.sendMessage(`§c${messages.ResizeClaimInsufficientArea.replace("{0}", "100")}`)
-    if((leftX + 5 > rightX || leftZ + 5 > rightZ) && !isAdminMode) return player.sendMessage(`§c${messages.NewClaimTooNarrow.replace("{0}", 5)}`)
+    if((((Math.abs(rightX - leftX) + 1) * (Math.abs(rightZ- leftZ) + 1)) < (config.LandLocker.Claims.MinSize^2)) && !isAdminMode) return player.sendMessage(`§c${messages.ResizeClaimInsufficientArea.replace("{0}", config.LandLocker.Claims.MinSize^2)}`)
+    if((leftX + config.LandLocker.Claims.MinWide > rightX || leftZ + config.LandLocker.Claims.MinWide > rightZ) && !isAdminMode) return player.sendMessage(`§c${messages.NewClaimTooNarrow.replace("{0}", config.LandLocker.Claims.MinWide)}`)
     if(overlapCheck(player, leftX, rightX, leftZ, rightZ)) return player.sendMessage(`§c${messages.CreateClaimFailOverlapShort}`)
     
 

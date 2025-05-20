@@ -32,7 +32,7 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
     land.members = land.members || [];
     
     if(!isOwner) {
-      if(targetPlayerName.toLowerCase() === "all") return player.sendMessage(`§c${messages.ClearPermsOwnerOnly}`)
+      if(["all", "public"].includes(targetPlayerName.toLowerCase())) return player.sendMessage(`§c${messages.ClearPermsOwnerOnly}`)
       // Marked, if player with no permission manager successfully used this, fix it.
       if(land.members.find(v => v.name.toLowerCase() === targetPlayerName.toLowerCase()).permissions.permissionTrust) return player.sendMessage(`§c${messages.ManagersDontUntrustManagers}`)
     }
@@ -47,11 +47,11 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
   }
   
 
-  if(c?.id && targetPlayerName.toLowerCase() === "all") {
+  if(c?.id && ["all", "public"].includes(targetPlayerName.toLowerCase())) {
     message = `§a${messages.ClearPermissionsOneClaim}`
-  } else if(c?.id && targetPlayerName.toLowerCase() !== "all") {
+  } else if(c?.id && !["all", "public"].includes(targetPlayerName.toLowerCase())) {
     message = `§a${messages.UntrustIndividualSingleClaim.replace("{0}", targetPlayerName)}`
-  } else if(!c?.id && targetPlayerName.toLowerCase() === "all") {
+  } else if(!c?.id && ["all", "public"].includes(targetPlayerName.toLowerCase())) {
     message = `§a${messages.UntrustEveryoneAllClaims}`
   } else {
     message = `§a${messages.UntrustIndividualAllClaims.replace("{0}", targetPlayerName)}`

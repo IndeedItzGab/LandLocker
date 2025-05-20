@@ -31,7 +31,7 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
   let lands = db.fetch("land", true)
   
   if(isOwner && !c) return player.sendMessage(`§c${messages.GrantPermissionNoClaim}`)
-  if(targetPlayerName !== "all" && (!db.fetch("landPlayersList", true).some(data => data.name.toLowerCase() === targetPlayerName.toLowerCase()))) return player.sendMessage(`§c${messages.PlayerNotFound2}`)
+  if(!["all", "public"].includes(targetPlayerName.toLowerCase()) && (!db.fetch("landPlayersList", true).some(data => data.name.toLowerCase() === targetPlayerName.toLowerCase()))) return player.sendMessage(`§c${messages.PlayerNotFound2}`)
 
   
   if (c?.id) {
@@ -53,7 +53,7 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
     }
   }
   
-  const who = targetPlayerName === "all" ? messages.CollectivePublic : targetPlayerName
+  const who = ["all", "public"].includes(targetPlayerName.toLowerCase()) ? messages.CollectivePublic : targetPlayerName
   const permissionType = messages.ContainersPermission
   const where = c?.id ? messages.LocationCurrentClaim : messages.LocationAllClaims
   player.sendMessage(`§a${messages.GrantPermissionConfirmation.replace("{0}", who).replace("{1}", permissionType).replace("{2}", where)}`)

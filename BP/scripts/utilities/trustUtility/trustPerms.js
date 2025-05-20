@@ -5,7 +5,7 @@ globalThis.updatePermissions = (land, targetName, type, player, isAllLands) => {
   const existingMember = land.members.find(m => m.name === targetName);
   const ownerPermissions = land.members.find(v => v.name.toLowerCase() === land.owner?.toLowerCase())
 
-  if(targetName.toLowerCase() === "all") {
+  if(targetName.toLowerCase() === "all" || targetName.toLowerCase() === "public") {
     switch(type) {
       case "fullTrust":
         land.publicPermissions.fullTrust = true

@@ -1,5 +1,5 @@
 globalThid.untrustPermission = (land, targetName, player, isAllLands) => {
-  if(targetName.toLowerCase() === "all") {
+  if(targetName.toLowerCase() === "all" || targetName.toLowerCase() === "public") {
     land.publicPermissions.fullTrust = false
     land.publicPermissions.accessTrust = false
     land.publicPermissions.containerTrust = false
