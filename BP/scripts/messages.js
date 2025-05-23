@@ -4,12 +4,14 @@
 export const messages = {
   RespectingClaims: "Now respecting claims.",
   IgnoringClaims: "Now ignoring claims.",
-  NoCreativeUnClaim: "You can't unclaim this land.  You can only make this claim larger or create additional claims.",
+  // **
+  NoCreativeUnClaim: "You can't unclaim this land.  You can only make this claim larger or create additional claims.", 
   SuccessfulAbandon: "Claims abandoned.  You now have {0} available claim blocks.",
   TransferClaimPermission: "That command requires the administrative claims permission.",
   TransferClaimMissing: "There's no claim here.  Stand in the administrative claim you want to transfer.",
   TransferClaimAdminOnly: "Only administrative claims may be transferred to a player.",
   PlayerNotFound2: "No player by that name has logged in recently.",
+  // **
   TransferTopLevel: "Only top level claims (not subdivisions) may be transferred.  Stand outside of the subdivision and try again.",
   TransferSuccess: "Claim transferred.",
   TrustListNoClaim: "Stand inside the claim you're curious about.",
@@ -21,21 +23,29 @@ export const messages = {
   UntrustIndividualSingleClaim: "Revoked {0}'s access to this claim.  To set permissions for an ALL your claims, stand outside them.",
   AdminClaimsMode: "Administrative claims mode active.  Any claims created will be free and editable by other administrators.",
   BasicClaimsMode: "Returned to basic claim creation mode.",
+  // **
   SubdivisionMode: "Subdivision mode.  Use your shovel to create subdivisions in your existing claims.  Use /basicclaims to exit.",
+  // **
   SubdivisionVideo2: "Click for Subdivision Help: {0}",
   DeleteClaimMissing: "There's no claim here.",
+  // **
   DeletionSubdivisionWarning: "This claim includes subdivisions.  If you're sure you want to delete it, use /deleteclaim again.",
   DeleteSuccess: "Claim deleted.",
+  // **
   CantDeleteAdminClaim: "You don't have permission to delete administrative claims.",
   DeleteAllSuccess: "Deleted all of {0}'s claims.",
   NoDeletePermission: "You don't have permission to delete claims.",
   AllAdminDeleted: "Deleted all administrative claims.",
   AdjustBlocksSuccess: "Adjusted {0}'s bonus claim blocks by {1}.  New total bonus blocks: {2}.",
   AdjustBlocksAllSuccess: "Adjusted all online players' bonus claim blocks by {0}.",
+  // **
   NotTrappedHere: "You can build here.  Save yourself.",
+  // **
   RescuePending: "If you stay put for 10 seconds, you'll be teleported out.  Please wait.",
   AbandonClaimMissing: "Stand in the claim you want to delete, or consider /abandonallclaims.",
+  // **
   NotYourClaim: "This isn't your claim.",
+  // **
   DeleteTopLevelClaim: "To delete a subdivision, stand inside it.  Otherwise, use /abandontoplevelclaim to delete this claim and all subdivisions.",
   AbandonSuccess: "Claim abandoned.  You now have {0} available claim blocks.",
   ConfirmAbandonAllClaims: "Are you sure you want to abandon ALL of your claims?  Please confirm with /abandonallclaims confirm",
@@ -52,69 +62,109 @@ export const messages = {
   LocationCurrentClaim: "in this claim",
   LocationAllClaims: "in all your claims",
   PvPImmunityStart: "You're protected from attack by other players as long as your inventory is empty.",
+  // **
   DonateItemsInstruction: "To give away the item(s) in your hand, left-click the chest again.",
+  // **
   ChestFull: "This chest is full.",
+  // **
   DonationSuccess: "Item(s) transferred to chest!",
+  // **
   PlayerTooCloseForFire2: "You can't start a fire this close to another player.",
+  // **
   TooDeepToClaim: "This chest can't be protected because it's too deep underground.  Consider moving it.",
+  // **
   ChestClaimConfirmation: "This chest is protected.",
+  // **
   AutomaticClaimNotification: "This chest and nearby blocks are protected from breakage and theft.",
+  // **
   AutomaticClaimOtherClaimTooClose: "Cannot create a claim for your chest, there is another claim too close!",
+  // **
   UnprotectedChestWarning: "This chest is NOT protected.  Consider using a golden shovel to expand an existing claim or to create a new one.",
   ThatPlayerPvPImmune: "You can't injure defenseless players.",
   CantFightWhileImmune: "You can't fight someone while you're protected from PvP.",
+  // **
   NoDamageClaimedEntity: "That belongs to {0}.",
   ShovelBasicClaimMode: "Shovel returned to basic claims mode.",
   RemainingBlocks: "You may claim up to {0} more blocks.",
+  // **
   CreativeBasicsVideo2: "Click for Land Claim Help: {0}",
+  // **
   SurvivalBasicsVideo2: "Click for Land Claim Help: {0}",
+  // **
   TrappedChatKeyword: "trapped;stuck",
+  // **
   TrappedInstructions: "Are you trapped in someone's land claim?  Try the /trapped command.",
+  // **
   PvPNoDrop: "You can't drop items while in PvP combat.",
+  // **
   PvPNoContainers: "You can't access containers during PvP combat.",
   PvPImmunityEnd: "Now you can fight with other players.",
+  // **
   NoBedPermission: "{0} hasn't given you permission to sleep here.",
+  // **
   NoWildernessBuckets: "You may only dump buckets inside your claim(s) or underground.",
   NoLavaNearOtherPlayer: "You can't place lava this close to {0}.",
+  // **
   TooFarAway: "That's too far away.",
+  // **
   BlockNotClaimed: "No one has claimed this block.",
+  // **
   BlockClaimed: "That block has been claimed by {0}.",
+  // **
   NoCreateClaimPermission: "You don't have permission to claim land.",
+  // **
   ResizeClaimTooNarrow: "This new size would be too small.  Claims must be at least {0} blocks wide.",
   ResizeNeedMoreBlocks: "You don't have enough blocks for this size.  You need {0} more.",
   ClaimResizeSuccess: "Claim resized.  {0} available claim blocks remaining.",
   ResizeFailOverlap: "Can't resize here because it would overlap another nearby claim.",
   ResizeStart: "Resizing claim.  Use your shovel again at the new location for this corner.",
+  // **
   ResizeFailOverlapSubdivision: "You can't create a subdivision here because it would overlap another subdivision.  Consider /abandonclaim to delete it, or use your shovel at a corner to resize it.",
+  // **
   SubdivisionStart: "Subdivision corner set!  Use your shovel at the location for the opposite corner of this new subdivision.",
+  // **
   CreateSubdivisionOverlap: "Your selected area overlaps another subdivision.",
+  // **
   SubdivisionSuccess: "Subdivision created!  Use /trust to share it with friends.",
   CreateClaimFailOverlap: "You can't create a claim here because it would overlap your other claim.  Use /abandonclaim to delete it, or use your shovel at a corner to resize it.",
+  // **
   CreateClaimFailOverlapOtherPlayer: "You can't create a claim here because it would overlap {0}'s claim.",
+  // **
   ClaimsDisabledWorld: "Land claims are disabled in this world.",
   ClaimStart: "Claim corner set!  Use the shovel again at the opposite corner to claim a rectangle of land.  To cancel, put your shovel away.",
   NewClaimTooNarrow: "This claim would be too small.  Any claim must be at least {0} blocks wide.",
   ResizeClaimInsufficientArea: "This claim would be too small.  Any claim must use at least {0} total claim blocks.",
   CreateClaimInsufficientBlocks: "You don't have enough blocks to claim that entire area.  You need {0} more blocks.",
+  // **
   AbandonClaimAdvertisement: "To delete another claim and free up some blocks, use /abandonclaim.",
   CreateClaimFailOverlapShort: "Your selected area overlaps an existing claim.",
   CreateClaimSuccess: "Claim created!  Use /trust to share it with friends.",
+  // **
   RescueAbortedMoved: "You moved!  Rescue cancelled.",
   OnlyOwnersModifyClaims: "Only {0} can modify this claim.",
+  // **
   NoBuildPvP: "You can't build in claims during PvP combat.",
   NoBuildPermission: "You don't have {0}'s permission to build here.",
   NoAccessPermission: "You don't have {0}'s permission to use that.",
   NoContainersPermission: "You don't have {0}'s permission to use that.",
   OwnerNameForAdminClaims: "an administrator",
   UnknownPlayerName: "someone",
+  // **
   ClaimTooSmallForEntities: "This claim isn't big enough for that.  Try enlarging it.",
+  // **
   TooManyEntitiesInClaim: "This claim has too many entities already.  Try enlarging the claim or removing some animals, monsters, paintings, or minecarts.",
+  // **
   YouHaveNoClaims: "You don't have any land claims.",
+  // **
   AutoBanNotify: "Auto-banned {0}({1}).  See logs for details.",
   AdjustGroupBlocksSuccess: "Adjusted bonus claim blocks for players with the {0} permission by {1}.  New total: {2}.",
+  // **
   InvalidPermissionID: "Please specify a player name, or a permission in [brackets].",
+  // **
   HowToClaimRegex: "(^|.*\\W)how\\W.*\\W(claim|protect|lock)(\\W.*|$)",
+  // **
   NoBuildOutsideClaims: "You can't build here unless you claim some land first.",
+  // **
   PlayerOfflineTime: "  Last login: {0} days ago.",
   BuildingOutsideClaims: "Other players can build here, too.  Consider creating a land claim to protect your work!",
   TrappedWontWorkHere: "Sorry, unable to find a safe location to teleport you to.  Contact an admin.",

@@ -86,7 +86,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     }
     
     if(permutationClaimBlocks < 0 && !isAdminMode) return player.sendMessage(`§c${messages.CreateClaimInsufficientBlocks.replace("{0}", Math.abs(permutationClaimBlocks))}`)
-    if((((Math.abs(rightX - leftX) + 1) * (Math.abs(rightZ- leftZ) + 1)) < (config.LandLocker.Claims.MinSize^2)) && !isAdminMode) return player.sendMessage(`§c${messages.ResizeClaimInsufficientArea.replace("{0}", config.LandLocker.Claims.MinSize^2)}`)
+    if((((Math.abs(rightX - leftX) + 1) * (Math.abs(rightZ- leftZ) + 1)) < (config.LandLocker.Claims.MinSize*config.LandLocker.Claims.MinSize)) && !isAdminMode) return player.sendMessage(`§c${messages.ResizeClaimInsufficientArea.replace("{0}", config.LandLocker.Claims.MinSize*config.LandLocker.Claims.MinSize)}`)
     if((leftX + config.LandLocker.Claims.MinWide > rightX || leftZ + config.LandLocker.Claims.MinWide > rightZ) && !isAdminMode) return player.sendMessage(`§c${messages.NewClaimTooNarrow.replace("{0}", config.LandLocker.Claims.MinWide)}`)
     if(overlapCheck(player, leftX, rightX, leftZ, rightZ)) return player.sendMessage(`§c${messages.CreateClaimFailOverlapShort}`)
     

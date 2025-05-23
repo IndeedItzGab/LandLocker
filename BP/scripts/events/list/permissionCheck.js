@@ -56,8 +56,7 @@ function permissionCheck(data, eventType) {
       player.sendMessage(`§c${messages.NoBuildPermission.replace("{0}", ownerName)}`)
       break;
     case "place":
-      blockEntity = data.permutationBeingPlaced
-      if((containerTrust || publicPermissions.containerTrust) && (blockEntity.hasTag("minecraft:crop") || ["minecraft:pumpkin_stem", "minecraft:melon_stem"].some(v => blockEntity.type.id.includes(v)))) return;
+      if((containerTrust || publicPermissions.containerTrust) && (data.permutationBeingPlaced.hasTag("minecraft:crop") || ["minecraft:pumpkin_stem", "minecraft:melon_stem"].some(v => data.permutationBeingPlaced.type.id.includes(v)))) return;
       data.cancel = true
       player.sendMessage(`§c${messages.NoBuildPermission.replace("{0}", ownerName)}`)
   }
