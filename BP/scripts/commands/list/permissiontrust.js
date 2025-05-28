@@ -38,7 +38,7 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
     let land = lands.find(v => v?.id === c?.id);
     land.members = land.members || [];
     
-    if(!isOwner) {
+    if(!isOwner && (!isAdmin || !player.hasTag("landlocker:ignoringClaims"))) {
       const playerLandData = land.members.find(v => v.name.toLowerCase() === player.name.toLowerCase() && land.owner?.toLowerCase() !== player.name.toLowerCase())
       if(playerLandData?.permissions?.permissionTrust === false || !playerLandData) return player.sendMessage(`§c${messages.NoPermissionTrust.replace("{0}", land.owner)}`);
       return player.sendMessage(`§c${messages.CantGrantThatPermission}`)

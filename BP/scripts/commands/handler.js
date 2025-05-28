@@ -26,3 +26,4 @@ import "./list/adminCommands/transferclaim.js"
 import "./list/adminCommands/ignoreclaims.js"
 
 // Progress Command - means it's not finished.
+import "./list/trapped.js"

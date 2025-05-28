@@ -30,15 +30,14 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
   const c = checkLand(player)
   const isOwner = c?.owner?.toLowerCase() === player.name.toLowerCase() || (!c?.owner && isAdmin)
   let lands = db.fetch("land", true)
-  
-  if(isOwner && !c) return player.sendMessage(`§c${messages.GrantPermissionNoClaim}`)
+  if(isOwner && !c ) return player.sendMessage(`§c${messages.GrantPermissionNoClaim}`)
   if(!["all", "public"].includes(targetPlayerName.toLowerCase()) && (!db.fetch("landPlayersList", true).some(data => data.name.toLowerCase() === targetPlayerName.toLowerCase()))) return player.sendMessage(`§c${messages.PlayerNotFound2}`)
   
   if (c?.id) {
     let land = lands.find(v => v?.id === c?.id);
     land.members = land.members || [];
     
-    if(!isOwner) {
+    if(!isOwner && (!isAdmin || !player.hasTag("landlocker:ignoringClaims"))) {
       const playerLandData = land.members.find(v => v.name.toLowerCase() === player.name.toLowerCase() && land.owner?.toLowerCase() !== player.name.toLowerCase())
       if(playerLandData?.permissions?.permissionTrust === false || !playerLandData) return player.sendMessage(`§c${messages.NoPermissionTrust.replace("{0}", land.owner)}`);
       if(!playerLandData?.permissions?.fullTrust) return player.sendMessage(`§c${messages.CantGrantThatPermission}`)

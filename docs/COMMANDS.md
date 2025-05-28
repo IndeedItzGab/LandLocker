@@ -17,7 +17,7 @@ These commands are meant to be use by anyone with or without the permission leve
 |trustlist            |                       |                        |Lists the permissions for the claim you’re standing in.                |
 |claimexplosion       |claimexplosions        |                        |Toggles whether explosives may be used in specific land claim.         |
 |basicclaims          |bc                     |                        |Puts your shovel back in basic claims mode.                            |
-
+|trapped              |                       |                        |Gets a player out of a land claim he’s trapped inside.                 |
 ## Operator/Admin Commands
 These commands are meant to be use by operators and cannot be accessible by non-operators.
 |NAME                      |ALIASES                |PARAMETERS              | DESCRIPTION                                                           |
