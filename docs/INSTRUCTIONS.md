@@ -21,7 +21,8 @@ Not most of the host services provide the same mechanics as aternos. Therefore, 
   - Upload the world to the server's world folder.
   - Upload the project's folder to the `server/files/development_behavior_packs`
   - Edit or Create a new file with the name "world_behavior_packs.json" inside the world with Beta APIs enabled.
-    - The content of the `world_behavior_packs.json` should be like this: ```json
+    - The content of the `world_behavior_packs.json` should be like this:
+    ```
     [
       "pack_id": "PROJECT_UUID_HERE",
       "version": [1, 0, 0] // PROJECT'S VERSION HERE
