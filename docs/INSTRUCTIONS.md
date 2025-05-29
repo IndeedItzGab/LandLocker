@@ -6,7 +6,7 @@ Having a trouble on how to install and use the LandLocker? don't worry, this pag
 - After downloading, start importing it to your Mineraft: Bedrock Edition.
 - Once imported, you can either activate it to your realm or your world.
 - Make sure that the "BETA APIs" is enabled in the experimental feature section.
-![BETA APIs](docs/images/beta_apis.jpg)
+![BETA APIs](images/beta_apis.jpg)
 
 ## Dedicated Server
 ### Aternos
