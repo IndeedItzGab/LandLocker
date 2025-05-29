@@ -6,7 +6,7 @@
 This is a Minecraft Bedrock Edition Add-On that is inspired by [GriefPrevention](https://legacy.griefprevention.com/) to give players the right to claim a land that prevents other unauthorize players or damage to cause any griefs in the claimed land.
 
 ## Instalation
-First, you must download the LandLocker pack that you can find in the [release section](https://github.com/IndeedItzGab/LandLocker/releases/). After that, import it with your minecraft. Once it's imported, you can now apply it to a world or realm. The "BETA APIs" experimental feature must be enabled.
+First, you must download the LandLocker pack that you can find in [CurseForge](https://www.curseforge.com/minecraft-bedrock/addons/landlocker). After that, import it with your minecraft. Once it's imported, you can now apply it to a world or realm. The "BETA APIs" experimental feature must be enabled.
 ![BETA APIs](docs/images/beta_apis.jpg)
 [Proper Instructions for installation.](docs/INSTRUCTION.md)
 You can now play with the the LandLocker!
