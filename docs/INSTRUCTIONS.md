@@ -16,7 +16,7 @@ Having a trouble on how to install and use the LandLocker? don't worry, this pag
 ### Any
 Not most of the host services provide the same mechanics as aternos. Therefore, this method is a bit complicated, but you could also use this method for installing add-on into your aternos server.
 - **New World Method**
-  - Follow the guide from Client/Locally instruction.
+  - Follow the guide from [Client/Locally](#clientlocally-or-realm) instruction.
   - Export the world from your game files.
   - Upload the world to the server's world folder.
   - Upload the project's folder to the `server/files/development_behavior_packs`
