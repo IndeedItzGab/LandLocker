@@ -17,8 +17,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
 
   let lands = db.fetch("land", true)
   const usedItem = player?.getComponent("inventory")?.container?.getItem(player?.selectedSlotIndex)
-  if(usedItem?.typeId !== "minecraft:golden_shovel") return;
-  
+  if(usedItem?.typeId !== config.LandLocker.Claims.ModificationTool) return;
   
   if(lands.some(d => (
     (d.bounds.lx === block.location.x && d.bounds.lz === block.location.z) ||

@@ -1,6 +1,7 @@
 import { world, system } from "@minecraft/server"
 import * as db from "../../utilities/storage.js" 
 import { messages } from "../../messages.js"
+import { config } from "../../config.js"
 import "../../utilities/checkLand.js"
 import "../../utilities/claimBlocks.js"
 import "../../utilities/getTopBlock.js"
@@ -21,7 +22,7 @@ function resize(event) {
   const isAdmin = player.isAdmin() // CODE_ORANGE
   const editData = player.getTags().find(v => v.startsWith("editingLand:"))
   const usedItem = player?.getComponent("inventory")?.container?.getItem(player?.selectedSlotIndex)
-  if(usedItem?.typeId !== "minecraft:golden_shovel") return;
+  if(usedItem?.typeId !== config.LandLocker.Claims.ModificationTool) return;
   
   let lands = db.fetch("land", true)
   

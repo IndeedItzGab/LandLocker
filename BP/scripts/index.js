@@ -1,6 +1,7 @@
 import "./utilities/prototype/handler.js"
 import "./commands/handler.js"
 import "./events/handler.js"
+import "./live/handler.js"
 
 import {system, world } from "@minecraft/server"
 system.beforeEvents.watchdogTerminate.subscribe((beforeWatchdogTerminate) => {

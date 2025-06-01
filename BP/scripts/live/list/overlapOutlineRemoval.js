@@ -1,7 +1,7 @@
 import { world, system } from "@minecraft/server"
 import * as db from "../../utilities/storage.js" 
 
-system.runInterval(() => {
+globalThis.overlapOutlineRemoval = () => {
   const allOverlapCacheData = db.find("overlapCacheBlocks:") //world.scoreboard.getObjectives().filter(data => data.id.includes("overlapCacheBlocks:"))
   for(const cache of allOverlapCacheData) {
     let blocksToBeRemoved = [];
@@ -18,4 +18,4 @@ system.runInterval(() => {
     db.store(cache, overlapCacheBlocks)
   }
     
-}, 20)
+}

@@ -5,10 +5,10 @@ globalThis.checkLand = (player) => {
   for(const data of Array.isArray(db.fetch("land")) ? db.fetch("land") : [db.fetch("land")]) {
     if (
       data &&
-      player.location.x >= data.bounds.lx &&
-      player.location.x <= data.bounds.rx &&
-      player.location.z >= data.bounds.lz &&
-      player.location.z <= data.bounds.rz &&
+      Math.round(player.location.x) >= data.bounds.lx &&
+      Math.round(player.location.x) <= data.bounds.rx &&
+      Math.round(player.location.z) >= data.bounds.lz &&
+      Math.round(player.location.z) <= data.bounds.rz &&
       player.dimension.id === data.world
     ) {
       return data;

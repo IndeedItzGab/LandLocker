@@ -4,7 +4,7 @@ import {
 } from "@minecraft/server";
 import { registerCommand }  from "../../commandRegistry.js"
 import { messages } from "../../../messages.js"
-
+import { config } from "../../../config.js"
 
 const commandInformation = {
   name: "adminclaims",
@@ -19,7 +19,7 @@ registerCommand(commandInformation, (origin) => {
   if(!player.isAdmin()) return player.sendMessage(`§c${messages.TransferClaimPermission}`)
 
   const usedItem = player?.getComponent("inventory")?.container?.getItem(player?.selectedSlotIndex)
-  if(usedItem?.typeId !== "minecraft:golden_shovel") return player.sendMessage(`§c${messages.MustHoldModificationToolForThat}`)
+  if(usedItem?.typeId !== config.LandLocker.Claims.ModificationTool) return player.sendMessage(`§c${messages.MustHoldModificationToolForThat}`)
   system.run(() => {
     player.addTag("shovelMode:adminClaims")
   })

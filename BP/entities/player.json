@@ -49,16 +49,34 @@
           {
             "on_damage": {
               "filters": {
-                "all_of": [
+                "any_of": [
                   {
-                    "test": "is_family",
-                    "subject": "other",
-                    "value": "player"
+                    "all_of": [
+                      { "test": "is_family", "subject": "other", "value": "player"},
+                      { "test": "has_tag", "subject": "self", "operator": "!=", "value": "inCombat" },
+                      { "test": "has_tag", "subject": "self", "value": "safeCombat.emptyInventory" }
+                    ]
                   },
                   {
-                    "test": "has_tag",
-                    "subject": "self",
-                    "value": "safeCombat.emptyInventory"
+                    "all_of": [
+                      { "test": "is_family", "subject": "other", "value": "player"},
+                      { "test": "has_tag", "subject": "other", "operator": "!=", "value": "inCombat" },
+                      { "test": "has_tag", "subject": "other", "value": "safeCombat.emptyInventory" }
+                    ]
+                  },
+                  {
+                    "all_of": [
+                      { "test": "is_family", "subject": "other", "value": "player"},
+                      { "test": "has_tag", "subject": "self", "operator": "!=", "value": "inCombat" },
+                      { "test": "has_tag", "subject": "self", "value": "safeCombat.inClaim" }
+                    ]
+                  },
+                  {
+                    "all_of": [
+                      { "test": "is_family", "subject": "other", "value": "player"},
+                      { "test": "has_tag", "subject": "other", "operator": "!=", "value": "inCombat" },
+                      { "test": "has_tag", "subject": "other", "value": "safeCombat.inClaim" }
+                    ]
                   }
                 ]
               }

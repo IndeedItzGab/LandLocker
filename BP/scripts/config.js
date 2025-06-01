@@ -16,7 +16,16 @@ export const config = {
       },
       AutomaticNewPlayerClaimsRadius: 4,
       MinSize: 10, // 10 × 10 = 100 Minimum Claim blocks must used in a claim. To let anyone make a small claims set it to 1
-      MinWide: 5
+      MinWide: 5,
+      InvestigationTool: "minecraft:stick", // **
+      ModificationTool: "minecraft:golden_shovel",
+    },
+    PVP: {
+      CombatTimeoutSeconds: 15,
+      ProtectPlayersInLandClaims:{
+        PlayerOwnedClaims: true, // **
+        AdministrativeClaims: true // **
+      }
     }
   }
 }

@@ -3,8 +3,9 @@ import * as db from "../../utilities/storage.js"
 import "../../utilities/getTopBlock.js"
 import "../../utilities/visualization.js"
 import { messages } from "../../messages.js"
+import { config } from "../../config.js"
 
-system.runInterval(() => {
+globalThis.show = () => {
   [...world.getPlayers()].forEach(player => {
     // Declaring Variables
     const inv = player.getComponent("inventory").container
@@ -21,10 +22,10 @@ system.runInterval(() => {
       const cachePlayer = [...world.getPlayers()].find(data => data.name.toLowerCase() === cache.split(':')[1])
       const inv = cachePlayer?.getComponent("inventory")?.container
       const heldItem = inv?.getItem(cachePlayer?.selectedSlotIndex)
-      if(heldItem?.typeId === "minecraft:golden_shovel" ||
+      if(heldItem?.typeId === config.LandLocker.Claims.ModificationTool ||
       (cache.split(':')[1] ==="admin" && world.getPlayers().some(d => (
         d.isAdmin() &&
-        d.getComponent("inventory")?.container.getItem(d.selectedSlotIndex)?.typeId === "minecraft:golden_shovel"
+        d.getComponent("inventory")?.container.getItem(d.selectedSlotIndex)?.typeId === config.LandLocker.Claims.ModificationTool
       )))) continue;
       let allPlayerCacheBlocks = db.fetch(cache, true)
       let blocksToBeRemoved = [];
@@ -46,7 +47,7 @@ system.runInterval(() => {
     
     let adminCacheBlocks = db.fetch(`landCacheBlocks:admin`, true)
     let playerCacheBlocks = db.fetch(`landCacheBlocks:${player.name.toLowerCase()}`, true)
-    if(heldItem?.typeId === "minecraft:golden_shovel") {
+    if(heldItem?.typeId === config.LandLocker.Claims.ModificationTool) {
       for(const data of land) {
         let cache = !data.owner ? adminCacheBlocks : playerCacheBlocks
         // Declaring all corners location
@@ -119,4 +120,4 @@ system.runInterval(() => {
       }
     }
   })
-}, 20)
+}
