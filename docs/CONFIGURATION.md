@@ -4,7 +4,7 @@ This page provides details about configuring LandLocker from its configuration f
 ## Table of contents
 - [Configuration](#configuration)
   - [Table of contents](#Table-of-contents)
-  - [Commands Setting)[#commands-setting)
+  - [Commands Setting][#commands-setting)
     - [Changing commands' namespace](#changing-commands-namespace)
   - [Tools](#tools)
     - [Investigation Tool](#investigation-tool)
@@ -13,10 +13,10 @@ This page provides details about configuring LandLocker from its configuration f
     - [Given claim blocks for new players](#given-claim-blocks-for-new-players)
     - [Given claim blocks per hour](#given-claim-blocks-per-hour)
     - [Maximum Accrued Blocks for each player](#maximum-accrued-blocks-for-each-player)
-    - [Default claim radius uses by /land:claim](#default-claim-radius-uses-by-land-claim)
+    - [Default claim radius uses by /land:claim](#default-claim-radius-uses-by-landclaim)
     - [Minimum size of a claim](#minimum-size-of-a-claim)
     - [Minimum wide of a claim](#minimum-wide-of-a-claim)
-  - [PVP](#pvp)
+  - [PVP](#pvp-settings)
     - [Combat Timeout](#combat-timeout)
     - [Protect players whenever they were in a claim](#protect-players-whenever-they-were-in a-claim)
 
