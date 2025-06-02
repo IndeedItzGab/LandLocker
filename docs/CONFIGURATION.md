@@ -80,3 +80,6 @@ The number of seconds after the last PvP damage, during which a player is still 
 `PVP.ProtectPlayersInLandClaims.PlayerOwnedClaims: true` & `PVP.ProtectPlayersInLandClaims.AdministrativeClaims: true`
 
 Both option serve the same purpose. `PlayerOwnedClaims` is responsible for keeping players safe in combat in a non-administrative claims.Therefore, the `AdministrativeClaims` keeps players safe in combat in a administrative claims.
+
+## Reference
+- [GriedPrevention Configuration Documention](https://legacy.griefprevention.com/configuration/)
