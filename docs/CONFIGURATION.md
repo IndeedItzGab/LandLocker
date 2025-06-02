@@ -4,7 +4,7 @@ This page provides details about configuring LandLocker from its configuration f
 ## Table of contents
 - [Configuration](#configuration)
   - [Table of contents](#Table-of-contents)
-  - [Commands Setting][#commands-setting)
+  - [Commands Setting](#commands-setting)
     - [Changing commands' namespace](#changing-commands-namespace)
   - [Tools](#tools)
     - [Investigation Tool](#investigation-tool)
@@ -18,7 +18,7 @@ This page provides details about configuring LandLocker from its configuration f
     - [Minimum wide of a claim](#minimum-wide-of-a-claim)
   - [PVP](#pvp-settings)
     - [Combat Timeout](#combat-timeout)
-    - [Protect players whenever they were in a claim](#protect-players-whenever-they-were-in a-claim)
+    - [Protect players whenever they were in a claim](#protect-players-whenever-they-were-in-a-claim)
 
 ## Commands Setting
 ### Changing commands' namespace
