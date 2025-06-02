@@ -23,8 +23,8 @@ export const config = {
     PVP: {
       CombatTimeoutSeconds: 15,
       ProtectPlayersInLandClaims:{
-        PlayerOwnedClaims: true, // **
-        AdministrativeClaims: true // **
+        PlayerOwnedClaims: true,
+        AdministrativeClaims: true
       }
     }
   }
