@@ -18,7 +18,7 @@ const commandInformation = {
   usage:[
     {
       name: "radius",
-      type: 1,
+      type: "Integer",
       optional: true
     }
   ]
@@ -60,7 +60,8 @@ registerCommand(commandInformation, (origin, radius = config.LandLocker.Claims.A
       containerTrust: false,
       permissionTrust: false
     },
-    members: []
+    members: [],
+    subdivisions: []
   }
   
   l.push(data)

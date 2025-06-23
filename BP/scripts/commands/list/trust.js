@@ -5,6 +5,7 @@ import {
 import { registerCommand }  from "../commandRegistry.js"
 import * as db from "../../utilities/storage.js"
 import "../../utilities/checkLand.js"
+import "../../utilities/checkSubLand.js"
 import "../../utilities/trustUtility/trustPerms.js"
 import { messages } from "../../messages.js"
 
@@ -15,7 +16,7 @@ const commandInformation = {
   usage:[
     {
       name: "player",
-      type: 3,
+      type: "String",
       optional: false
     }
   ]
@@ -28,6 +29,7 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
   const player = origin.sourceEntity
   const isAdmin = player.isAdmin() // CODE_ORANGE
   const c = checkLand(player)
+  const s = checkSubLand(player)
   const isOwner = c?.owner?.toLowerCase() === player.name.toLowerCase() || (!c?.owner && isAdmin)
   let lands = db.fetch("land", true)
   if(isOwner && !c ) return player.sendMessage(`§c${messages.GrantPermissionNoClaim}`)
@@ -42,8 +44,18 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
       if(playerLandData?.permissions?.permissionTrust === false || !playerLandData) return player.sendMessage(`§c${messages.NoPermissionTrust.replace("{0}", land.owner)}`);
       if(!playerLandData?.permissions?.fullTrust) return player.sendMessage(`§c${messages.CantGrantThatPermission}`)
     }
-
-    updatePermissions(land, targetPlayerName.toLowerCase(), "fullTrust", player, false);
+    
+    if(s) {
+      let sub = land.subdivisions.find(d => (
+        s.data.bounds.lx === d.bounds.lx &&
+        s.data.bounds.rx === d.bounds.rx &&
+        s.data.bounds.lz === d.bounds.lz &&
+        s.data.bounds.rz === d.bounds.rz
+      ))
+      updatePermissions(sub, targetPlayerName.toLowerCase(), "fullTrust", player, false);
+    } else {
+      updatePermissions(land, targetPlayerName.toLowerCase(), "fullTrust", player, false);
+    }
     lands = lands.map(l => l.id === land.id ? land : l);
   } else {
    for (let land of lands.filter(data => data.owner === player.name.toLowerCase())) {

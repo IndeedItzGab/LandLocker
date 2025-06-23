@@ -13,7 +13,7 @@ const commandInformation = {
   usage:[
     {
       name: "count",
-      type: 1,
+      type: "Integer",
       optional: false
     }
   ]

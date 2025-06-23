@@ -2,7 +2,7 @@ import { world } from "@minecraft/server";
 import * as db from "./storage.js";
 
 globalThis.checkLand = (player) => {
-  for(const data of Array.isArray(db.fetch("land")) ? db.fetch("land") : [db.fetch("land")]) {
+  for(const data of db.fetch("land", true)) {
     if (
       data &&
       Math.round(player.location.x) >= data.bounds.lx &&

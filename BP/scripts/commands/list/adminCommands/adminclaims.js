@@ -21,6 +21,7 @@ registerCommand(commandInformation, (origin) => {
   const usedItem = player?.getComponent("inventory")?.container?.getItem(player?.selectedSlotIndex)
   if(usedItem?.typeId !== config.LandLocker.Claims.ModificationTool) return player.sendMessage(`§c${messages.MustHoldModificationToolForThat}`)
   system.run(() => {
+    player.removeTag("shovelMode:subdivisionClaims")
     player.addTag("shovelMode:adminClaims")
   })
   player.sendMessage(`§a${messages.AdminClaimsMode}`)

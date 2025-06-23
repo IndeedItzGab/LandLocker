@@ -1,9 +1,9 @@
 # Configuration
 This page provides details about configuring LandLocker from its configuration file located in `BP/scripts/config.js`. Allowing you to adjust available options depending on your preference.
 
-## Table of contents
+## Table of Contents
 - [Configuration](#configuration)
-  - [Table of contents](#Table-of-contents)
+  - [Table of Contents](#Table-of-contents)
   - [Commands Setting](#commands-setting)
     - [Changing commands' namespace](#changing-commands-namespace)
   - [Tools](#tools)

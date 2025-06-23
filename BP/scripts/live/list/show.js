@@ -55,6 +55,23 @@ globalThis.show = () => {
         const corners = visualization("landlocker:basic_primary_block", secondaryBlock, data)
         
         let isCurrentlyOverlapState = db.fetch(`overlapCacheBlocks:${data.id}`, true)
+        // Handle subdivision claim stuffs (mechanics are the same with the parent)
+        for(const sub of data.subdivisions) {
+          const subCorners = visualization("landlocker:subdivide_primary_block", "landlocker:subdivide_secondary_block", sub)
+          for(const pos of subCorners) {
+            const block = dimension.getBlock({x: pos.x, y: pos.y, z: pos.z})
+            if(cache.some(d => d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z)) continue;
+            
+            cache.push({
+              owner: player.name.toLowerCase(),
+              landId: data.id,
+              originalBlock: block?.typeId,
+              temporaryBlock: pos.type,
+              location: { x: pos.x, y: pos.y, z: pos.z}
+            })
+            block?.setType(pos.type)
+          }
+        }
         
         // Handle replacing blocks at specified location
         for(const pos of corners) {
@@ -86,19 +103,23 @@ globalThis.show = () => {
       // Declaring variables
       const claimTag = player.getTags().find(d => d.includes("shovelClaim:"))
       const editData = player.getTags().find(v => v.startsWith("editingLand:"))
-      const adminTag = player.hasTag("shovelMode:adminClaims")
+      const editSubData = player.getTags().find(v => v.startsWith("isEditingSub:"))
+      const isAdminMode = player.hasTag("shovelMode:adminClaims")
+      const isSubdivisionMode = player.hasTag("shovelMode:subdivisionClaims")
       
-      // Remove admin mode
-      if(adminTag) {
+      // Remove admin mode or subdivision mode
+      if(isAdminMode || isSubdivisionMode) {
         system.run(() => {
           player.removeTag("shovelMode:adminClaims")
+          player.removeTag("shovelMode:subdivisionClaims")
           player.sendMessage(`§b${messages.ShovelBasicClaimMode}`)
         })
       }
       
       // Remove edit data that is for resizing the claim
-      if(editData) {
+      if(editData || editSubData) {
         system.run(() => {
+          player.removeTag(editSubData)
           player.removeTag(editData)
         })
       };

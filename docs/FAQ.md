@@ -15,3 +15,7 @@ No, enabling explosion in your land with `/claimexplosion` won't be permanently 
 Starting from LandLocker V1.0.2, player should have the tag "Admin" by using `/tag player Admin`. Therefore, people without admin tag could still execute administrative commands but they couldn't run what it actually does since it has admin filter, so players with "Admin" are the only one who can fully run administrative commands.
 > ![IMPORTANT]
 > Detecting Administrator may change in the future, stay updated.
+
+## What is a subdivided claims?
+A subdivided claim is a claim within a parent claim, these claim allows the owner of the claim to create a alternative smaller claim within their claim with separated permissions from the parent claim.
+These subdivided claims usually have white wool and iron block as a claim outline. The size of these subdivided claims cannot be bigger than the parent claim. Furthermore, subdivided claim cannot be created outside of a claim. Additionallt, it does not consume any claim blocks.

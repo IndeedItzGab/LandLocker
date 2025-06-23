@@ -14,7 +14,7 @@ const commandInformation = {
   usage:[
     {
       name: "args",
-      type: 3,
+      type: "String",
       optional: true
     }
   ]

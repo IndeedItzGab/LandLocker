@@ -12,6 +12,7 @@ import "./list/permissiontrust.js"
 import "./list/untrust.js"
 import "./list/claimexplosions.js"
 import "./list/basicclaims.js"
+import "./list/subdivideclaims.js"
 
 // Admin Commands
 import "./list/adminCommands/deleteclaim.js"

@@ -4,6 +4,7 @@ import { config } from "../../config.js"
 
 world.afterEvents.playerSpawn.subscribe((event) => {
   const player = event.player
+  
   const landPlayersList = db.fetch("landPlayersList", true) || []
   if(landPlayersList.some(e => e?.name.toLowerCase() === player.name.toLowerCase())) return; // Check if the player has recently joined the server.
   landPlayersList.push({

@@ -23,7 +23,6 @@ export const messages = {
   UntrustIndividualSingleClaim: "Revoked {0}'s access to this claim.  To set permissions for an ALL your claims, stand outside them.",
   AdminClaimsMode: "Administrative claims mode active.  Any claims created will be free and editable by other administrators.",
   BasicClaimsMode: "Returned to basic claim creation mode.",
-  // **
   SubdivisionMode: "Subdivision mode.  Use your shovel to create subdivisions in your existing claims.  Use /basicclaims to exit.",
   // **
   SubdivisionVideo2: "Click for Subdivision Help: {0}",

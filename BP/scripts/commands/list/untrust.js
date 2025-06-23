@@ -7,6 +7,7 @@ import * as db from "../../utilities/storage.js"
 import { messages } from "../../messages.js"
 import "../../utilities/trustUtility/untrustPerms.js"
 import "../../utilities/checkLand.js"
+import "../../utilities/checkSubLand.js"
 
 const commandInformation = {
   name: "untrust",
@@ -15,7 +16,7 @@ const commandInformation = {
   usage:[
     {
       name: "player",
-      type: 3,
+      type: "String",
       optional: false
     }
   ]
@@ -25,6 +26,7 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
 
   const player = origin.sourceEntity
   const c = checkLand(player)
+  const s = checkSubLand(player)
   const isAdmin = player.isAdmin()
   const isOwner = c?.owner?.toLowerCase() === player.name.toLowerCase()
   let lands = db.fetch("land", true)
@@ -42,7 +44,18 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
       if(playerLandData?.permissions?.permissionTrust === false || !playerLandData) return player.sendMessage(`§c${messages.NoPermissionTrust.replace("{0}", land.owner)}`);
       if(land.members.find(v => v.name.toLowerCase() === targetPlayerName.toLowerCase()).permissions?.permissionTrust) return player.sendMessage(`§c${messages.ManagersDontUntrustManagers}`)
     }
-    untrustPermission(land, targetPlayerName, player, false);
+    
+    if(s) {
+      let sub = land.subdivisions.find(d => (
+        s.data.bounds.lx === d.bounds.lx &&
+        s.data.bounds.rx === d.bounds.rx &&
+        s.data.bounds.lz === d.bounds.lz &&
+        s.data.bounds.rz === d.bounds.rz
+      ))
+      untrustPermission(sub, targetPlayerName.toLowerCase(), "fullTrust", player, false);
+    } else {
+      untrustPermission(land, targetPlayerName.toLowerCase(), "fullTrust", player, false);
+    }
     lands = lands.map(l => l.id === land.id ? land : l);
   } else {
     lands = lands.filter(v => v.owner === player.name.toLowerCase());

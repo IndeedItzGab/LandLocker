@@ -1,3 +1,40 @@
-LandLocker V1.0.1
-- I am expecting some changes on detecting players with Operator permission. Therefore, .isOp() will be replaced in the near future update.
-- All expected field changes will be marked as "CODE_ORANGE". With this, searching would be easier and faster.
+- Subdivision Claim
+  - /subdivideclaims
+    - /sc
+  - /restrictsubclaim
+    - /rsc
+  
+  List of files that may need a change to support subdivision claims
+  EVENTS
+  - show.js
+  - resize.js
+  - claimWithTool.js (START HERE)
+  - disableClaimExplosion.js
+  - explosion.js
+  - permissionCheck, 
+  - secureClaimOutline.js
+  - isAllowedCombat.js
+  - combatProtector.js
+  - combatChecker.js
+  - overlapOutlineRemoval.js
+  - playerInClaim.js
+  
+  UTILITIES
+  - overlapCheck.js
+  - trustPerms.js
+  - untrustPerms.js
+  - checkLand.js
+  
+  COMMANDS
+  - permissiontrust.js
+  - containertrust.js
+  - accesstrust.js
+  - trust.js
+  - untrust.js
+  - abandonclaim.js
+  - claimexplosion.js
+  - trustlist
+  - deleteclaim.js
+
+- Visual Distance Limitation
+  - This improves the performance of the landlocker by limiting the block loads

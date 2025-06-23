@@ -18,6 +18,8 @@ These commands are meant to be use by anyone with or without the permission leve
 |claimexplosion       |claimexplosions        |                        |Toggles whether explosives may be used in specific land claim.         |
 |basicclaims          |bc                     |                        |Puts your shovel back in basic claims mode.                            |
 |trapped              |                       |                        |Gets a player out of a land claim he’s trapped inside.                 |
+|subdivideclaims      |sc                     |                        |Switches your shovel to subdivision mode, so you can subdivide your claims.|
+
 ## Operator/Admin Commands
 These commands are meant to be use by operators and cannot be accessible by non-operators.
 |NAME                      |ALIASES                |PARAMETERS              | DESCRIPTION                                                           |

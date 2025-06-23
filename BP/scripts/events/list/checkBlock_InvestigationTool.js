@@ -6,7 +6,7 @@ import "../../utilities/checkLand.js"
 world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   const player = event.player
   const block = event.block
-  const equipment = event.itemStack.typeId
+  const equipment = event.itemStack?.typeId
 
   if(equipment === config.LandLocker.Claims.InvestigationTool) {
     const land = checkLand(block)

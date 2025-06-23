@@ -10,6 +10,7 @@ import "../../utilities/checkLand.js"
 import "../../utilities/overlapCheck.js"
 import "../../utilities/generateID.js"
 import "../../utilities/getTopBlock.js"
+import "../../utilities/checkSubLand.js"
 
 const commandInformation = {
   name: "trustlist",
@@ -22,10 +23,18 @@ registerCommand(commandInformation, (origin) => {
 
   const player = origin.sourceEntity
   const c = checkLand(player)
+  const s = checkSubLand(player)
 
   let lands = db.fetch("land", true) || []
   if(!c) return player.sendMessage(`§c${messages.TrustListNoClaim}`)
-  let land = lands.find(v => v?.id == c?.id)
+  
+  let land;
+  if(s) {
+    land = s.data
+  } else {
+    land = lands.find(d => d?.id === c?.id)
+  }
+  
   let manage = "", build = "", containers = "", access = ""
   
   if(land.publicPermissions.permissionTrust === true) {

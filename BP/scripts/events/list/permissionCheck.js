@@ -1,6 +1,7 @@
 import { world } from "@minecraft/server"
 import { messages } from "../../messages.js"
 import "../../utilities/checkLand.js"
+import "../../utilities/checkSubLand.js"
 
 world.beforeEvents.playerBreakBlock.subscribe((e) => {
   permissionCheck(e, "break")
@@ -23,16 +24,20 @@ function permissionCheck(data, eventType) {
   const player = data.player;
   const isAdmin = player.isAdmin() // CODE_ORANGE
   const blockEntity = data.block || data.target;
-  const land = checkLand(blockEntity);
   
+  const c = checkLand(blockEntity);
+  const s = checkSubLand(blockEntity)
+  let land = c
+ 
   if(!land ||
   land.owner?.toLowerCase() === player.name.toLowerCase() ||
   (!land.owner && isAdmin) ||
   (player.hasTag("landlocker:ignoringClaims") && isAdmin)) return;
   
-  const permissions = land.members.find(v => v.name.toLowerCase() === player.name.toLowerCase())?.permissions;
+  let dataToCheck = s ? s.data : c
+  const permissions = dataToCheck.members.find(v => v.name.toLowerCase() === player.name.toLowerCase())?.permissions;
   const ownerName = !land.owner ? messages.OwnerNameForAdminClaims : land.owner
-  const publicPermissions = land.publicPermissions
+  const publicPermissions = dataToCheck.publicPermissions
   const accessTrust = permissions?.accessTrust || false
   const containerTrust = permissions?.containerTrust || false
   const fullTrust = permissions?.fullTrust || false
@@ -56,7 +61,7 @@ function permissionCheck(data, eventType) {
       player.sendMessage(`§c${messages.NoBuildPermission.replace("{0}", ownerName)}`)
       break;
     case "place":
-      if((containerTrust || publicPermissions.containerTrust) && (data.permutationBeingPlaced.hasTag("minecraft:crop") || ["minecraft:pumpkin_stem", "minecraft:melon_stem"].some(v => data.permutationBeingPlaced.type.id.includes(v)))) return;
+      if((containerTrust || publicPermissions.containerTrust) && (data.permutationToPlace.hasTag("minecraft:crop") || ["minecraft:pumpkin_stem", "minecraft:melon_stem"].some(v => data.permutationToPlace?.type.id.includes(v)))) return;
       data.cancel = true
       player.sendMessage(`§c${messages.NoBuildPermission.replace("{0}", ownerName)}`)
   }
