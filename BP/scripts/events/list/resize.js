@@ -44,7 +44,7 @@ function resize(event) {
   
   // Declare which side will get adjust
 
-  let test, updateCacheBlocksData = [];
+  let test = [];
   for(const data of lands) {
     const isOwner = data.owner?.toLowerCase() === player.name.toLowerCase();
     if (!isOwner && (!data.owner && !isAdmin)) continue;
@@ -57,7 +57,7 @@ function resize(event) {
           test2 = {data: sub, index: index}
         }
       })
-      if(test2.data) {
+      if(test2?.data) {
         const editSubDataArray = editSubData.split(':')
         system.run(() => player.removeTag(editSubData))
         newSize(test2.data, block, `doNotRemoveThis:${editSubDataArray[1]}:${editSubDataArray[3]}:${editSubDataArray[4]}`)
@@ -66,10 +66,8 @@ function resize(event) {
         if(overlapSubCheck(player, test2.data.bounds.lx, test2.data.bounds.rx, test2.data.bounds.lz, test2.data.bounds.rz, data.id, test2.index)) return player.sendMessage(`§c${messages.CreateSubdivisionOverlap}`)
   
         player.sendMessage(`§a${messages.ClaimResizeSuccess.replace("{0}", claimBlocks(player))}`)
-        const blocks = db.fetch(`landCacheBlocks:${!data.owner ? "admin" : player.name.toLowerCase()}`, true) || []
-        const corners = visualization("landlocker:subdivide_primary_block", "landlocker:subdivide_secondary_block", test2.data)
   
-        updateCache(blocks, corners, updateCacheBlocksData, player, data)
+        updateCache(player, lands)
       }
     } else {
       if(data?.id === editData?.split(':')[1]) {
@@ -86,13 +84,22 @@ function resize(event) {
         // If it overlaps with other claim then it stop updating the land size.
         const overlap = overlapCheck(player, data.bounds.lx, data.bounds.rx, data.bounds.lz, data.bounds.rz, data.id)
         if(overlap) return player.sendMessage(`§c${messages.ResizeFailOverlap}`) 
-        
-        const secondaryBlock = !data.owner ? "landlocker:admin_secondary_block" : "landlocker:basic_secondary_block"
-        const corners = visualization("landlocker:basic_primary_block", secondaryBlock, data)
+
+        // If it a subdivision went outside the land then stop updating the land size.
+        for(const sub of data.subdivisions) {
+          if(
+            data.bounds.lx > sub.bounds.lx ||
+            data.bounds.rx < sub.bounds.rx ||
+            data.bounds.lz > sub.bounds.lz ||
+            data.bounds.rz < sub.bounds.rz
+          ) {
+            
+            return player.sendMessage(`§c${messages.ResizeFailWentOutside}`)
+          }
+        }
+
       
-        const blocks = db.fetch(`landCacheBlocks:${!data.owner ? "admin" : player.name.toLowerCase()}`, true) || []
-  
-        updateCache(blocks, corners, updateCacheBlocksData, player, data)
+        updateCache(player, lands)
 
         player.sendMessage(`§e${messages.ClaimResizeSuccess.replace("{0}", !data.owner ? 0 : claimBlocks(player))}`)
         test = !data.owner ? "admin" : player.name.toLowerCase()
@@ -111,42 +118,47 @@ function resize(event) {
     }
   }
   
-  db.store(`landCacheBlocks:${test}`, updateCacheBlocksData)
   db.store("land", lands)
 }
 
-function updateCache(blocks, corners, updateCacheBlocksData, player, data) {
-  for(const cacheBlock of blocks) {
-    const block = player.dimension.getBlock({x: cacheBlock.location.x, y: cacheBlock.location.y, z: cacheBlock.location.z})
-    const specifiedCornerData = corners.find(pos => pos.x === cacheBlock.location.x && pos.y === cacheBlock.location.y && pos.z === cacheBlock.location.z)
-    specifiedCornerData ? console.info(specifiedCornerData.type) :null
-    const specifiedBlock = specifiedCornerData
-      ? specifiedCornerData.type !== cacheBlock.temporaryBlock ? specifiedCornerData.type : cacheBlock.temporaryBlock
-      : cacheBlock.originalBlock;
-      
-    system.run(() => {
-      specifiedBlock ? block?.setType(specifiedBlock) : null
-    })
-    updateCacheBlocksData.push(cacheBlock)
-  }
-  
-  // Update cache blocks that shows when you hold golden shovel.
-  for(const pos of corners) {
-    const block = player.dimension.getBlock({x: pos.x, y: pos.y, z: pos.z})
-    //if(block?.typeId.includes("landlocker:")) continue
-    //if(playerCacheBlocks.some(d => d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z)) continue;
-    const shovelCacheBlock = db.fetch("shovelClaimCacheBlock", true)?.find(b => b.location.x === pos.x && b.location.y === pos.y && b.location.z === pos.z)?.originalBlock
-    const currentOriginalBlock = updateCacheBlocksData.find(b => b.location.x === pos.x && b.location.y === pos.y && b.location.z === pos.z)?.originalBlock || shovelCacheBlock?.originalBlock ||block?.typeId
-    updateCacheBlocksData.push({
-      owner: player.name.toLowerCase(),
-      landId: data.id,
-      originalBlock: currentOriginalBlock,
-      temporaryBlock: pos.type,
-      location: { x: pos.x, y: pos.y, z: pos.z}
-    })
-    system.run(() => {
-      block?.setType(pos.type)
-    })
+function updateCache(player, lands) {
+  world.getDimension(player.dimension.id).getEntities().forEach(entity => {
+    if(entity.getTags().some(tag => tag === `landlocker:${player.id}`)) {
+      system.run(() => entity?.remove())
+    }
+  })
+
+  for(const data of lands) {
+    for(const sub of data.subdivisions) {
+      const subCorners = visualization({red: 1, green: 1, blue: 1}, {red: 0.3, green: 0.3, blue: 0.3}, sub)
+      for(const pos of subCorners) {
+        system.run(() => {
+          const entity = world.getDimension(player.dimension.id).spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
+          entity?.addTag(`landlocker:${player.id}`)
+          if(pos.color.red === 1 && pos.color.green === 1 && pos.color.blue === 1) {
+            entity?.addTag(`landlocker:border:${pos.color}:primary`)
+          } else {
+            entity?.addTag(`landlocker:border:${pos.color}`)
+          }
+          entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
+          entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
+        })
+      }
+    }
+
+    for(const land of lands) {
+      const secondaryBorder = !land.owner ? {red: 1, green: 0.6, blue: 0} : {red: 1, green: 1, blue: 0}
+      const corners = visualization({red: 1, green: 1, blue: 1}, secondaryBorder, data)
+      for(const pos of corners) {
+        system.run(() => {
+          const entity = world.getDimension(player.dimension.id).spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
+          entity?.addTag(`landlocker:${player.id}`)
+          entity?.addTag(`landlocker:border:${pos.color}`)
+          entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
+          entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
+        })
+      }
+    }
   }
 }
 

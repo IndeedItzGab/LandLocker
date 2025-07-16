@@ -1,40 +1,7 @@
-- Subdivision Claim
-  - /subdivideclaims
-    - /sc
-  - /restrictsubclaim
-    - /rsc
-  
-  List of files that may need a change to support subdivision claims
-  EVENTS
-  - show.js
-  - resize.js
-  - claimWithTool.js (START HERE)
-  - disableClaimExplosion.js
-  - explosion.js
-  - permissionCheck, 
-  - secureClaimOutline.js
-  - isAllowedCombat.js
-  - combatProtector.js
-  - combatChecker.js
-  - overlapOutlineRemoval.js
-  - playerInClaim.js
-  
-  UTILITIES
-  - overlapCheck.js
-  - trustPerms.js
-  - untrustPerms.js
-  - checkLand.js
-  
-  COMMANDS
-  - permissiontrust.js
-  - containertrust.js
-  - accesstrust.js
-  - trust.js
-  - untrust.js
-  - abandonclaim.js
-  - claimexplosion.js
-  - trustlist
-  - deleteclaim.js
+LandLocker V1.0.6
+- Revamped visualization where LandLocker now show particles instead of blocks.
+- Fixed an issue where player could resize the claim smaller than an subdivision within that claim went out of the claim size.
 
-- Visual Distance Limitation
-  - This improves the performance of the landlocker by limiting the block loads
+LandLocker V1.0.7
+- Revamped visualization where outline style will now be halfly-solid.
+[Test the claims if they'll get automatically deleted. If so, fix it.]

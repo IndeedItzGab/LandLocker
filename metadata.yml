@@ -1,0 +1,7 @@
+name: LandLocker
+version: V1.0.6
+status: BETA
+message: |
+  # LandLocker V1.0.6
+  - Revamped visualization where LandLocker now show particles instead of blocks.
+  - Fixed an issue where player could resize the claim that makes an subdivision get out of the claim.

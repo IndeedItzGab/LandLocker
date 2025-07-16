@@ -1,8 +1,8 @@
-globalThis.visualization = (primaryBorder, secondaryBorder, data) => {
+globalThis.visualization = (primaryBlock, secondaryBlock, data) => {
   const cornerOffsets = [
-    { dx: 0, dz: 0, color: primaryBorder },
-    { dx: 1, dz: 0, color: secondaryBorder },
-    { dx: 0, dz: 1, color: secondaryBorder }
+    { dx: 0, dz: 0, type: `${primaryBlock}` },
+    { dx: 1, dz: 0, type: `${secondaryBlock}` },
+    { dx: 0, dz: 1, type: `${secondaryBlock}` }
   ];
   
   const baseCorners = [
@@ -21,7 +21,7 @@ globalThis.visualization = (primaryBorder, secondaryBorder, data) => {
       const z = base.z + offset.dz * (base.z === data.bounds.rz ? -1 : 1);
       const y = getTopBlock({ x, z });
   
-      corners.push({ x, y, z, color: JSON.stringify(offset.color) });
+      corners.push({ x, y, z, type: `${offset.type}` });
     }
   }
   
@@ -37,7 +37,7 @@ globalThis.visualization = (primaryBorder, secondaryBorder, data) => {
         if (remaining >= 6) {
           if(z === current.z) continue
           const y = getTopBlock({ x: current.x, z });
-          corners.push({ x: current.x, y, z, color: JSON.stringify(secondaryBorder) });
+          corners.push({ x: current.x, y, z, type: secondaryBlock });
         }
       }
     } else if (current.z === next.z) {
@@ -47,7 +47,7 @@ globalThis.visualization = (primaryBorder, secondaryBorder, data) => {
         if (remaining >= 6) {
           if(x === current.x) continue
           const y = getTopBlock({ x, z: current.z });
-          corners.push({ x, y, z: current.z, color: JSON.stringify(secondaryBorder) });
+          corners.push({ x, y, z: current.z, type: secondaryBlock });
         }
       }
     }

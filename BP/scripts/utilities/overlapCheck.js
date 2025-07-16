@@ -17,32 +17,35 @@ globalThis.overlapCheck = (player, lx = null, rx = null, lz = null, rz = null, l
       data.bounds.rz >= lz &&
       data.world === player.dimension.id
     ) {
-      //let currentOwnerIsEditing = JSON.parse((world.scoreboard.getObjective(`landCacheBlocks:${data.owner}`)?.displayName || '[]')).length !== 0
-      let currentOwnerIsEditing = db.fetch(`landCacheBlocks:${!data.owner ? "admin" : data.owner}`, true).length !== 0
-      let overlapCacheBlocks = db.fetch(`overlapCacheBlocks:${data.id}`, true)
-      
-      if(!currentOwnerIsEditing) {
-        const corners = visualization("landlocker:overlap_primary_block", "landlocker:overlap_secondary_block", data)
-        
-        let newData = []
-        for(const pos of corners) {
-          const block = player.dimension.getBlock({x: pos.x, y: pos.y, z: pos.z})
-          // Avoid making netherrack & lit_redstone_ore into a original block as it will make it permanently implemented in the world.
-          if(overlapCacheBlocks.some(d => d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z)) continue;
-          const recentOriginalBlock = overlapCacheBlocks.find(d => d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z)
-          newData.push({
-            tick: system.currentTick + (30*20),
-            landId: data.id,
-            originalBlock: recentOriginalBlock?.originalBlock || block?.typeId,
-            temporaryBlock: pos.type,
-            location: { x: pos.x, y: pos.y, z: pos.z}
-          })
-          system.run(() => {
-            block?.setType(pos.type)
-          })
-        }
-        db.store(`overlapCacheBlocks:${data.id}`, newData)
+      const corners = visualization({red: 1, green: 0, blue: 0}, {red: 1, green: 0, blue: 0}, data)
+      // Spawn the entity border that posses red particles indicating the claim is overlapped
+      for(const pos of corners) {
+        system.run(() => {
+          const entity = world.getDimension(player.dimension.id).spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
+          entity?.addTag(`landlocker:${player.id}`)
+          if(JSON.parse(pos.color).red === 1 && JSON.parse(pos.color).green === 1 && JSON.parse(pos.color).blue === 1) {
+            entity?.addTag(`landlocker:border:${pos.color}:primary`)
+          } else {
+            entity?.addTag(`landlocker:border:${pos.color}`)
+          }
+          entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
+          entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
+        })
       }
+
+      // Remove overlap entities after five seconds.
+      system.runTimeout(() => {
+        world.getEntities().forEach(entity => {
+          if(entity.getTags().some(tag =>
+            JSON.parse(tag.replace("landlocker:border:", '').replace(":primary", '')).color.red === 1 &&
+            JSON.parse(tag.replace("landlocker:border:", '').replace(":primary", '')).color.green === 0 &&
+            JSON.parse(tag.replace("landlocker:border:", '').replace(":primary", '')).color.blue === 0
+         )) {
+          entity.remove()
+         }
+        })
+      }, 20*5)
+      
       return data;
     }
   }

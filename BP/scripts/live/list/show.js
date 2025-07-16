@@ -1,4 +1,4 @@
-import { world, system } from "@minecraft/server"
+import { world, system, MolangVariableMap } from "@minecraft/server"
 import * as db from "../../utilities/storage.js" 
 import "../../utilities/getTopBlock.js"
 import "../../utilities/visualization.js"
@@ -15,130 +15,121 @@ globalThis.show = () => {
     const adminClaim = lands.filter(data => data.owner === null && !data.owner && isAdmin)
     const land = lands.filter(data => data.owner?.toLowerCase() === player.name.toLowerCase()).concat(adminClaim)
     const dimension = player.dimension
-    const allCacheBlocks = db.find(`landCacheBlocks:`)//world.scoreboard.getObjectives().filter(data => data.id.includes("landCacheBlocks:"))
     
-    // Responsible for removing the edit blocks once the owner of the land no longer hold a golden shovel
-    for(const cache of allCacheBlocks) {
-      const cachePlayer = [...world.getPlayers()].find(data => data.name.toLowerCase() === cache.split(':')[1])
-      const inv = cachePlayer?.getComponent("inventory")?.container
-      const heldItem = inv?.getItem(cachePlayer?.selectedSlotIndex)
-      if(heldItem?.typeId === config.LandLocker.Claims.ModificationTool ||
-      (cache.split(':')[1] ==="admin" && world.getPlayers().some(d => (
-        d.isAdmin() &&
-        d.getComponent("inventory")?.container.getItem(d.selectedSlotIndex)?.typeId === config.LandLocker.Claims.ModificationTool
-      )))) continue;
-      let allPlayerCacheBlocks = db.fetch(cache, true)
-      let blocksToBeRemoved = [];
-      
-      for(const cacheBlock of allPlayerCacheBlocks) {
-        if(typeof cacheBlock?.originalBlock === "undefined") continue
-        const block = dimension.getBlock({x: cacheBlock.location.x, y: cacheBlock.location.y, z: cacheBlock.location.z})
-        block?.setType(cacheBlock.originalBlock)
-          
-        // Make sure that it is updated before removing the block from cache data
-        const updatedBlock = block ? dimension.getBlock(block?.location) : null
-        if(updatedBlock && updatedBlock?.typeId === cacheBlock?.originalBlock) {
-          blocksToBeRemoved.push(cacheBlock)
-        }
-      }
-      allPlayerCacheBlocks = allPlayerCacheBlocks.filter(data => !blocksToBeRemoved.includes(data))
-      db.store(cache, allPlayerCacheBlocks)
-    }
-    
-    let adminCacheBlocks = db.fetch(`landCacheBlocks:admin`, true)
-    let playerCacheBlocks = db.fetch(`landCacheBlocks:${player.name.toLowerCase()}`, true)
     if(heldItem?.typeId === config.LandLocker.Claims.ModificationTool) {
-      for(const data of land) {
-        let cache = !data.owner ? adminCacheBlocks : playerCacheBlocks
-        // Declaring all corners location
-        const secondaryBlock = !data.owner ? "landlocker:admin_secondary_block" : "landlocker:basic_secondary_block"
-        const corners = visualization("landlocker:basic_primary_block", secondaryBlock, data)
-        
-        let isCurrentlyOverlapState = db.fetch(`overlapCacheBlocks:${data.id}`, true)
-        // Handle subdivision claim stuffs (mechanics are the same with the parent)
-        for(const sub of data.subdivisions) {
-          const subCorners = visualization("landlocker:subdivide_primary_block", "landlocker:subdivide_secondary_block", sub)
-          for(const pos of subCorners) {
-            const block = dimension.getBlock({x: pos.x, y: pos.y, z: pos.z})
-            if(cache.some(d => d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z)) continue;
-            
-            cache.push({
-              owner: player.name.toLowerCase(),
-              landId: data.id,
-              originalBlock: block?.typeId,
-              temporaryBlock: pos.type,
-              location: { x: pos.x, y: pos.y, z: pos.z}
-            })
-            block?.setType(pos.type)
+      dimension.getEntities().forEach(entity => {
+        if(entity.getTags().some(tag => tag === `landlocker:${player.id}`)) {
+          const blockX = Math.floor(entity.location.x);
+          const blockY = Math.floor(entity.location.y);
+          const blockZ = Math.floor(entity.location.z);
+
+          const molangVars = new MolangVariableMap();
+          const color = JSON.parse(entity.getTags().find(tag => tag.startsWith("landlocker:border:")).slice("landlocker:border:".length).replace(":primary", ''))
+          molangVars.setFloat("variable.emitter_lifetime", 1000);
+          molangVars.setFloat("variable.emittor_size", 200.0);
+          molangVars.setColorRGB("variable.color", {red: color.red, green: color.green, blue: color.blue});
+
+          if(entity.getTags().some(tag => tag.endsWith(":primary") && tag.startsWith("landlocker:border:"))) {
+            for (let x = 0.0; x < 1.01; x += 0.5) {
+              for (let y = 0.0; y < 1.01; y += 0.5) {
+                for (let z = 0.0; z < 1.01; z += 0.5) {
+                  dimension.spawnParticle("minecraft:wax_particle", {
+                    x: blockX + x,
+                    y: blockY + y,
+                    z: blockZ + z
+                  },
+                  molangVars);
+                }
+              }
+            }
+          } else {
+            for (let x = 0.0; x < 1.01; x += 1) {
+              for (let y = 0.0; y < 1.01; y += 1) {
+                for (let z = 0.0; z < 1.01; z += 1) {
+                  dimension.spawnParticle("minecraft:wax_particle", {
+                    x: blockX + x,
+                    y: blockY + y,
+                    z: blockZ + z
+                  },
+                  molangVars);
+                }
+              }
+            }
           }
         }
+      })
+
+      if(player.hasTag("landlocker:showing")) return;
+      player.addTag("landlocker:showing")
+
+     
         
-        // Handle replacing blocks at specified location
-        for(const pos of corners) {
-          const block = dimension.getBlock({x: pos.x, y: pos.y, z: pos.z})
-          // Avoid outline blocks (aka edit blockd) to be permanently implemented to the world.
-          if(cache.some(d => d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z)) continue;
-          
-          // If the land's outline is currently in overlapping state that was trigger by someone/you then it will ignore the current block-
-          // and get the original block from the overlap cache data
-          let currentOverlapBlock = isCurrentlyOverlapState.find(d => d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z)
-          isCurrentlyOverlapState = isCurrentlyOverlapState.filter(d => !(d.location.x === pos.x && d.location.y === pos.y && d.location.z === pos.z))
-          
-          // Push the new cache data
-          cache.push({
-            owner: player.name.toLowerCase(),
-            landId: data.id,
-            originalBlock: currentOverlapBlock?.originalBlock || block?.typeId,
-            temporaryBlock: pos.type,
-            location: { x: pos.x, y: pos.y, z: pos.z}
-          })
-          block?.setType(pos.type)
+
+      for(const data of land) {
+        const secondaryBorder = !data.owner ? {red: 1, green: 0.6, blue: 0} : {red: 1, green: 1, blue: 0}
+        const corners = visualization({red: 1, green: 1, blue: 1}, secondaryBorder, data)
+        // Orange {red: 1, green: 0.6, blue: 0}
+        // Red {red: 1, green: 0, blue: 0}
+        // Yellow {red: 1, green: 1, blue: 0}
+        // Green {red: 0, green: 1, blue: 0}
+        // Blue {red: 0, green: 0, blue: 1}
+        // Purple {red: 0.6, green: 0, blue: 1}
+        // Violet {red: 1, green: 0, blue: 1}
+        // Sky Blue {red: 0, green: 0.6, blue: 1}
+        // Cyan {red: 0, green: 1, blue: 1}
+        // Pink {red: 1, green: 0, blue: 0.6}
+        // White {red: 1, green: 1, blue: 1}
+        // Black {red: 0, green: 0, blue: 0}
+        // Gray {red: 0.5, green: 0.5, blue: 0.5}
+        for(const sub of data.subdivisions) {
+          const subCorners = visualization({red: 1, green: 1, blue: 1}, {red: 0.5, green: 0.5, blue: 0.5}, sub)
+          for(const pos of subCorners) {
+            const entity = dimension.spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
+            entity?.addTag(`landlocker:${player.id}`)
+            if(JSON.parse(pos.color).red === 1 && JSON.parse(pos.color).green === 1 && JSON.parse(pos.color).blue === 1) {
+            entity?.addTag(`landlocker:border:${pos.color}:primary`)
+            } else {
+              entity?.addTag(`landlocker:border:${pos.color}`)
+            }
+            entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
+            entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
+          }
         }
-        db.store(`overlapCacheBlocks:${data.id}`, isCurrentlyOverlapState)
-        db.store(`landCacheBlocks:${!data.owner ? "admin" : player.name.toLowerCase()}`, cache)
+        for(const pos of corners) {
+          const entity = dimension.spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
+          entity?.addTag(`landlocker:${player.id}`)
+          if(JSON.parse(pos.color).red === 1 && JSON.parse(pos.color).green === 1 && JSON.parse(pos.color).blue === 1) {
+            entity?.addTag(`landlocker:border:${pos.color}:primary`)
+          } else {
+            entity?.addTag(`landlocker:border:${pos.color}`)
+          }
+          entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
+          entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
+        }
       }
     } else {
       // This codes run if the player don't hold golden shovel
-      
-      // Declaring variables
-      const claimTag = player.getTags().find(d => d.includes("shovelClaim:"))
-      const editData = player.getTags().find(v => v.startsWith("editingLand:"))
-      const editSubData = player.getTags().find(v => v.startsWith("isEditingSub:"))
-      const isAdminMode = player.hasTag("shovelMode:adminClaims")
-      const isSubdivisionMode = player.hasTag("shovelMode:subdivisionClaims")
-      
-      // Remove admin mode or subdivision mode
-      if(isAdminMode || isSubdivisionMode) {
-        system.run(() => {
-          player.removeTag("shovelMode:adminClaims")
-          player.removeTag("shovelMode:subdivisionClaims")
-          player.sendMessage(`§b${messages.ShovelBasicClaimMode}`)
+      const editingLand = player.getTags()?.find(tag => tag.startsWith("editingLand:"))
+      const isEditingSub = player.getTags()?.find(tag => tag.startsWith("isEdtingSub:"))
+      const shovelClaim = player.getTags()?.find(tag => tag.startsWith("shovelClaim:"))
+      const shovelMode = player.getTags()?.find(tag => tag.startsWith("shovelMode:"))
+      shovelMode ? player.removeTag(shovelMode) : null;
+      shovelClaim ? player.removeTag(shovelClaim) : null;
+      editingLand ? player.removeTag(editingLand) : null;
+      isEditingSub ? player.removeTag(isEditingSub) : null;
+
+      // Responsible for removing the custom entity borders
+      if(player.hasTag("landlocker:showing")) {
+        player.removeTag("landlocker:showing")
+        world.getDimension("minecraft:overworld").getEntities().forEach(entity => {
+          if(entity.getTags().some(tag => tag === `landlocker:${player.id}`)) {
+            entity?.remove()
+          }
         })
       }
-      
-      // Remove edit data that is for resizing the claim
-      if(editData || editSubData) {
-        system.run(() => {
-          player.removeTag(editSubData)
-          player.removeTag(editData)
-        })
-      };
-      
-      // Remove claim data that is for claiming a land vai golden shovel
-      if(claimTag) {
-        system.run(() => {
-          player.removeTag(claimTag)
-        })
-        let shovelCacheBlock = db.fetch("shovelClaimCacheBlock", true).find(d => d.owner === player.name.toLowerCase())
-        const block = world.getDimension(`${shovelCacheBlock?.world}`)?.getBlock({x: shovelCacheBlock.location.x, y: shovelCacheBlock.location.y, z: shovelCacheBlock.location.z})
-        if(block) {
-          system.run(() => {
-            block?.setType(shovelCacheBlock?.originalBlock)
-            shovelCacheBlock = db.fetch("shovelClaimCacheBlock", true).filter(d => !(d.location.x === shovelCacheBlock.location.x && d.location.y === shovelCacheBlock.location.y && d.location.z === shovelCacheBlock.location.z && d.owner === shovelCacheBlock.owner))
-            db.store("shovelClaimCacheBlock", shovelCacheBlock)
-          })
-        }
-      }
+
+
+
     }
   })
 }
