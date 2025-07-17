@@ -80,11 +80,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CF_API_TOKEN: "${{ secrets.CURSEFORGE_TOKEN }}"
           FILE_NAME: ${{ env.FILE_NAME }}
+          MESSAGE: ${{ env.MESSAGE }}
         run: |
           echo @$FILE_NAME
           RESPONSE=$(curl -X POST \
             -H "X-Api-Token: $CF_API_TOKEN" \
-            -F 'metadata={"changelog": "${{ env.MESSAGE }}", "changelogType": "markdown", "gameVersion": [13429, 13543, 13604], "releaseType": "release"}' \
+            -F 'metadata={"changelog": "$MESSAGE", "changelogType": "markdown", "gameVersion": [13429, 13543, 13604], "releaseType": "release"}' \
             -F "file=@\"./$FILE_NAME\"" \
             "https://minecraft-bedrock.curseforge.com/api/projects/1259901/upload-file")
           FILE_ID=$(echo $RESPONSE | jq -r '.id')

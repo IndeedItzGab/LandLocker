@@ -4,5 +4,5 @@ status: BETA
 message: |
   # LandLocker V1.0.7
   I apologize for uploading LandLocker V1.0.6 that doesn't work at all because of a minor issue. Therefore, the issue is now fixed.
-  - Implementation of auto updater. Therefore, you can now use this project without any issue if you recently use LandLocker V1.0.4 in your server/world/realm.
-  - Fixed an issue where the whole project won't work because of a minor issue.
+   - Implementation of auto updater. Therefore, you can now use this project without any issue if you recently use LandLocker V1.0.4 in your server/world/realm.
+   - Fixed an issue where the whole project won't work because of a minor issue.
