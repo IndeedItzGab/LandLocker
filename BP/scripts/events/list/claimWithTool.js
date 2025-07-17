@@ -167,7 +167,8 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
           permissionTrust: false
         },
         members: [],
-        subdivisions: []
+        subdivisions: [],
+        version: "1.0.7"
       })
 
       const secondaryBorder = isAdminMode ? {red: 1, green: 0.6, blue: 0} : {red: 1, green: 1, blue: 0}

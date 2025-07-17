@@ -1,6 +1,5 @@
 import { system } from "@minecraft/server"
 import "./list/show.js"
-import "./list/overlapOutlineRemoval.js"
 import "./list/deliverAccruedBlocks.js"
 import "./list/combatChecker.js"
 import "./list/playerInClaim.js"
@@ -8,7 +7,6 @@ import "./list/playerInClaim.js"
 // One Second Interval
 system.runInterval(() => {
   show()
-  overlapOutlineRemoval()
   combatChecker()
   playerInClaim()
 }, 1*20)
