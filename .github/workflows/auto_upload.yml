@@ -86,7 +86,7 @@ jobs:
             -H "X-Api-Token: $CF_API_TOKEN" \
             -F 'metadata={"changelog": "${{ env.MESSAGE }}", "changelogType": "markdown", "gameVersion": [13429, 13543, 13604], "releaseType": "release"}' \
             -F "file=@\"./$FILE_NAME\"" \
-            "https://minecraft.curseforge.com/api/projects/1259901/upload-file")
+            "https://minecraftbedrock.curseforge.com/api/projects/1259901/upload-file")
           FILE_ID=$(echo $RESPONSE | jq -r '.id')
           echo "CURSEFORGE_FILE_ID=$FILE_ID" >> $GITHUB_ENV
         
