@@ -1,7 +1,9 @@
 name: LandLocker
-version: V1.0.6
+version: V1.0.7
 status: BETA
 message: |
-  # LandLocker V1.0.6
-  - Revamped visualization where LandLocker now show particles instead of blocks.
-  - Fixed an issue where player could resize the claim that makes an subdivision get out of the claim.
+  # LandLocker V1.0.7
+  *I apologize for uploading LandLocker V1.0.6 that doesn't work at all because of a minor issue. Therefore, the issue is now fixed.*
+
+  - Implementation of auto updater. Therefore, you can now use this project without any issue if you recently use LandLocker V1.0.4 in your server/world/realm.
+  - Fixed an issue where the whole project won't work because of a minor issue.

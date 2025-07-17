@@ -61,7 +61,8 @@ registerCommand(commandInformation, (origin, radius = config.LandLocker.Claims.A
       permissionTrust: false
     },
     members: [],
-    subdivisions: []
+    subdivisions: [],
+    version: "1.0.7"
   }
   
   l.push(data)

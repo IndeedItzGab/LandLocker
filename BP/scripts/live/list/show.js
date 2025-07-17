@@ -25,8 +25,7 @@ globalThis.show = () => {
 
           const molangVars = new MolangVariableMap();
           const color = JSON.parse(entity.getTags().find(tag => tag.startsWith("landlocker:border:")).slice("landlocker:border:".length).replace(":primary", ''))
-          molangVars.setFloat("variable.emitter_lifetime", 1000);
-          molangVars.setFloat("variable.emittor_size", 200.0);
+          molangVars.setFloat("variable.emitter_lifetime", 1);
           molangVars.setColorRGB("variable.color", {red: color.red, green: color.green, blue: color.blue});
 
           if(entity.getTags().some(tag => tag.endsWith(":primary") && tag.startsWith("landlocker:border:"))) {
