@@ -9,6 +9,7 @@ import { messages } from "../../../messages.js"
 const commandInformation = {
   name: "ignoreclaims",
   description: "Toggles ignore claims mode.",
+  permissionLevel: 1,
   aliases: ["ic"],
   usage:[]
 }
@@ -16,7 +17,6 @@ const commandInformation = {
 registerCommand(commandInformation, (origin) => {
   
   const player = origin.sourceEntity
-  if(!player.isAdmin()) return player.sendMessage(`§c${messages.TransferClaimPermission}`)
 
   const statusTag = player.hasTag("landlocker:ignoringClaims")
   system.run(() => {

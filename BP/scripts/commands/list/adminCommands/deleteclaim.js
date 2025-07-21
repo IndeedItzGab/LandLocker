@@ -10,6 +10,7 @@ import "../../../utilities/checkLand.js"
 const commandInformation = {
   name: "deleteclaim",
   description: "Deletes the claim you're standing in, even if it's not your claim.",
+  permissionLevel: 1,
   aliases: ["dl"],
   usage:[]
 }
@@ -18,7 +19,6 @@ registerCommand(commandInformation, (origin) => {
   
   
   const player = origin.sourceEntity
-  if(!player.isAdmin()) return player.sendMessage(`§c${messages.TransferClaimPermission}`)
 
   const c = checkLand(player)
 

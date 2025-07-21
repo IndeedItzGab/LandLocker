@@ -23,11 +23,7 @@ globalThis.overlapCheck = (player, lx = null, rx = null, lz = null, rz = null, l
         system.run(() => {
           const entity = world.getDimension(player.dimension.id).spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
           entity?.addTag(`landlocker:${player.id}`)
-          if(JSON.parse(pos.color).red === 1 && JSON.parse(pos.color).green === 1 && JSON.parse(pos.color).blue === 1) {
-            entity?.addTag(`landlocker:border:${pos.color}:primary`)
-          } else {
-            entity?.addTag(`landlocker:border:${pos.color}`)
-          }
+          entity?.addTag(`landlocker:border:${pos.color}`)
           entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
           entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
         })
@@ -35,14 +31,13 @@ globalThis.overlapCheck = (player, lx = null, rx = null, lz = null, rz = null, l
 
       // Remove overlap entities after five seconds.
       system.runTimeout(() => {
-        world.getEntities().forEach(entity => {
-          if(entity.getTags().some(tag =>
-            JSON.parse(tag.replace("landlocker:border:", '').replace(":primary", '')).color.red === 1 &&
-            JSON.parse(tag.replace("landlocker:border:", '').replace(":primary", '')).color.green === 0 &&
-            JSON.parse(tag.replace("landlocker:border:", '').replace(":primary", '')).color.blue === 0
-         )) {
-          entity.remove()
-         }
+        player.dimension.getEntities().forEach(entity => {
+          try {
+            const color = JSON.parse(entity.getTags().find(tag => tag.startsWith("landlocker:border:")).slice("landlocker:border:".length).replace(":primary", ''))
+            if(color?.red === 1 && color?.green === 0 && color?.blue === 0) {
+              entity?.remove()
+            }
+          } catch (err) {}
         })
       }, 20*5)
       

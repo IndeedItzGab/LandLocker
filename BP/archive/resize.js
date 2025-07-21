@@ -16,7 +16,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((e) => resize(e))
 function resize(event) {
   const player = event.player
   const block = event.block
-  const isAdmin = player.isAdmin()
+  const isAdmin = player.playerPermissionLevel === 2
   const editData = player.getTags().find(v => v.startsWith("editingLand:"))
   const editSubData = player.getTags().find(v => v.startsWith("isEditingSub:"))
   const usedItem = player?.getComponent("inventory")?.container?.getItem(player?.selectedSlotIndex)

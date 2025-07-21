@@ -13,7 +13,7 @@ import "../../utilities/overlapSubCheck.js"
 world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   const player = event.player
   const block = event.block
-  const isAdmin = player.isAdmin()
+  const isAdmin = player.playerPermissionLevel === 2
   // Early return to avoid further execution causing to decrease the performance of landlocker
   const usedItem = player?.getComponent("inventory")?.container?.getItem(player?.selectedSlotIndex)
   if(usedItem?.typeId !== config.LandLocker.Claims.ModificationTool) return;

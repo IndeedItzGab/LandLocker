@@ -27,7 +27,7 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
   const player = origin.sourceEntity
   const c = checkLand(player)
   const s = checkSubLand(player)
-  const isAdmin = player.isAdmin()
+  const isAdmin = player.playerPermissionLevel === 2
   const isOwner = c?.owner?.toLowerCase() === player.name.toLowerCase()
   let lands = db.fetch("land", true)
   

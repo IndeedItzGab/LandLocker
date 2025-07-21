@@ -9,6 +9,7 @@ import { messages } from "../../../messages.js"
 const commandInformation = {
   name: "setaccruedclaimblocks",
   description: "Updates a player's accrued claim block total.",
+  permissionLevel: 1,
   aliases: ["scb"],
   usage:[
     {
@@ -28,7 +29,6 @@ registerCommand(commandInformation, (origin, targetPlayerName, amount) => {
   
 
   const player = origin.sourceEntity
-  if(!player.isAdmin()) return player.sendMessage(`§c${messages.TransferClaimPermission}`)
 
   let landPlayersList = db.fetch("landPlayersList", true)
   let targetPlayerData = landPlayersList.find(data => data.name.toLowerCase() === targetPlayerName.toLowerCase())

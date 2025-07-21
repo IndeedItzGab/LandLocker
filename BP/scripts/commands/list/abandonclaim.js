@@ -19,7 +19,6 @@ const commandInformation = {
 registerCommand(commandInformation, (origin) => {
 
   const player = origin.sourceEntity
-  const isAdmin = player.isAdmin()
   const c = checkLand(player)
   const sub = checkSubLand(player)
   const isOwner = c?.owner?.toLowerCase() === player.name.toLowerCase()

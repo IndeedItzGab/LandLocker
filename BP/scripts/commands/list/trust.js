@@ -27,7 +27,7 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
   if(origin.sourceBlock || origin.initiator || origin.sourceEntity.typeId !== "minecraft:player") return { status: 1 }
   
   const player = origin.sourceEntity
-  const isAdmin = player.isAdmin() // CODE_ORANGE
+  const isAdmin = player.playerPermissionLevel
   const c = checkLand(player)
   const s = checkSubLand(player)
   const isOwner = c?.owner?.toLowerCase() === player.name.toLowerCase() || (!c?.owner && isAdmin)

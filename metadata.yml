@@ -1,8 +1,9 @@
 name: LandLocker
-version: V1.0.7
-status: BETA
+version: V1.0.8
+status: STABLE
 message: |
-  # LandLocker V1.0.7
-  I apologize for uploading LandLocker V1.0.6 that doesn't work at all because of a minor issue. Therefore, the issue is now fixed.
-   - Implementation of auto updater. Therefore, you can now use this project without any issue if you recently use LandLocker V1.0.4 in your server/world/realm.
-   - Fixed an issue where the whole project won't work because of a minor issue.
+  # LandLocker V1.0.8
+  This version is now considered as stable. Therefore, you can expect less or no issues.
+  - Revamped administrative commands where it can now be only executed by a operator. Therefore, `Admin` tag is no longer necessary for these commands.
+  - Fixed an issue where the particles won't show after having a claim in an unloaded chunks. Furthermore, annoying errors in the console have been removed.
+  - Fixed unnoticable issue with overlapped particles where it doesn't get removed after a few seconds as expected.

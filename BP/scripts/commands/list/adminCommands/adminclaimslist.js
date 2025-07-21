@@ -9,6 +9,7 @@ import { messages } from "../../../messages.js"
 const commandInformation = {
   name: "adminclaimslist",
   description: "Lists all administrative claims.",
+  permissionLevel: 1,
   aliases: [],
   usage:[]
 }
@@ -17,7 +18,6 @@ registerCommand(commandInformation, (origin) => {
   
 
   const player = origin.sourceEntity
-  if(!player.isAdmin()) return player.sendMessage(`§c${messages.TransferClaimPermission}`)
 
   const adminLands = db.fetch("land", true).filter(v => !v.owner);
   let l = `§e${messages.ClaimsListHeader}:`

@@ -10,7 +10,7 @@ globalThis.show = () => {
     // Declaring Variables
     const inv = player.getComponent("inventory").container
     const heldItem = inv.getItem(player.selectedSlotIndex)
-    const isAdmin = player.isAdmin() // CODE_ORANGE
+    const isAdmin = player.playerPermissionLevel === 2
     const lands = db.fetch("land", true)
     const adminClaim = lands.filter(data => data.owner === null && !data.owner && isAdmin)
     const land = lands.filter(data => data.owner?.toLowerCase() === player.name.toLowerCase()).concat(adminClaim)
@@ -32,12 +32,14 @@ globalThis.show = () => {
             for (let x = 0.0; x < 1.01; x += 0.5) {
               for (let y = 0.0; y < 1.01; y += 0.5) {
                 for (let z = 0.0; z < 1.01; z += 0.5) {
-                  dimension.spawnParticle("minecraft:wax_particle", {
-                    x: blockX + x,
-                    y: blockY + y,
-                    z: blockZ + z
-                  },
-                  molangVars);
+                  try {
+                    dimension.spawnParticle("minecraft:wax_particle", {
+                      x: blockX + x,
+                      y: blockY + y,
+                      z: blockZ + z
+                    },
+                    molangVars);
+                  } catch (err) {}
                 }
               }
             }
@@ -45,12 +47,14 @@ globalThis.show = () => {
             for (let x = 0.0; x < 1.01; x += 1) {
               for (let y = 0.0; y < 1.01; y += 1) {
                 for (let z = 0.0; z < 1.01; z += 1) {
-                  dimension.spawnParticle("minecraft:wax_particle", {
-                    x: blockX + x,
-                    y: blockY + y,
-                    z: blockZ + z
-                  },
-                  molangVars);
+                  try {
+                    dimension.spawnParticle("minecraft:wax_particle", {
+                      x: blockX + x,
+                      y: blockY + y,
+                      z: blockZ + z
+                    },
+                    molangVars);
+                  } catch (err) {}
                 }
               }
             }
@@ -60,9 +64,6 @@ globalThis.show = () => {
 
       if(player.hasTag("landlocker:showing")) return;
       player.addTag("landlocker:showing")
-
-     
-        
 
       for(const data of land) {
         const secondaryBorder = !data.owner ? {red: 1, green: 0.6, blue: 0} : {red: 1, green: 1, blue: 0}
@@ -83,27 +84,31 @@ globalThis.show = () => {
         for(const sub of data.subdivisions) {
           const subCorners = visualization({red: 1, green: 1, blue: 1}, {red: 0.5, green: 0.5, blue: 0.5}, sub)
           for(const pos of subCorners) {
+            try {
+               const entity = dimension.spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
+              entity?.addTag(`landlocker:${player.id}`)
+              if(JSON.parse(pos.color).red === 1 && JSON.parse(pos.color).green === 1 && JSON.parse(pos.color).blue === 1) {
+              entity?.addTag(`landlocker:border:${pos.color}:primary`)
+              } else {
+                entity?.addTag(`landlocker:border:${pos.color}`)
+              }
+              entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
+              entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
+            } catch (err) {}
+          }
+        }
+        for(const pos of corners) {
+          try {
             const entity = dimension.spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
             entity?.addTag(`landlocker:${player.id}`)
             if(JSON.parse(pos.color).red === 1 && JSON.parse(pos.color).green === 1 && JSON.parse(pos.color).blue === 1) {
-            entity?.addTag(`landlocker:border:${pos.color}:primary`)
+              entity?.addTag(`landlocker:border:${pos.color}:primary`)
             } else {
               entity?.addTag(`landlocker:border:${pos.color}`)
             }
             entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
             entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
-          }
-        }
-        for(const pos of corners) {
-          const entity = dimension.spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
-          entity?.addTag(`landlocker:${player.id}`)
-          if(JSON.parse(pos.color).red === 1 && JSON.parse(pos.color).green === 1 && JSON.parse(pos.color).blue === 1) {
-            entity?.addTag(`landlocker:border:${pos.color}:primary`)
-          } else {
-            entity?.addTag(`landlocker:border:${pos.color}`)
-          }
-          entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
-          entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
+          } catch (err) {}
         }
       }
     } else {
@@ -126,9 +131,6 @@ globalThis.show = () => {
           }
         })
       }
-
-
-
     }
   })
 }
