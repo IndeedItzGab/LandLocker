@@ -1,9 +1,6 @@
 name: LandLocker
-version: V1.0.8
+version: V1.0.81
 status: STABLE
 message: |
-  # LandLocker V1.0.8
-  This version is now considered as stable. Therefore, you can expect less or no issues.
-  - Revamped administrative commands where it can now be only executed by a operator. Therefore, `Admin` tag is no longer necessary for these commands.
-  - Fixed an issue where the particles won't show after having a claim in an unloaded chunks. Furthermore, annoying errors in the console have been removed.
-  - Fixed unnoticable issue with overlapped particles where it doesn't get removed after a few seconds as expected.
+  # LandLocker V1.0.81
+  - Updated to support the latest version of Minecraft: Bedrock Edition.
