@@ -4,6 +4,7 @@ import { messages } from "../../messages.js"
 import "../../utilities/checkLand.js"
 
 world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
+  if(!event.isFirstEvent) return;
   const player = event.player
   const block = event.block
   const equipment = event.itemStack?.typeId

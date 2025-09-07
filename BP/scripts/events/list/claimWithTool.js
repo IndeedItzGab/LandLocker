@@ -11,6 +11,7 @@ import "../../utilities/overlapSubCheck.js"
 
 // The other function related to claiming land with shovel would be in show.js file.
 world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
+  if(!event.isFirstEvent) return;
   const player = event.player
   const block = event.block
   const isAdmin = player.playerPermissionLevel === 2
@@ -55,14 +56,14 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   if(!claimTag) {
     system.run(() => player.addTag(`shovelClaim:${block.location.x}:${block.location.z}`))
     if(!isSubdivideClaim) {
-      system.run(() => {
-        const entity = world.getDimension(player.dimension.id).spawnEntity("landlocker:border", {x: block.location.x + 0.5, y: block.location.y, z: block.location.z + 0.5})
-        entity?.addTag(`landlocker:${player.id}`)
-        entity?.addTag(`landlocker:border:${JSON.stringify({red: 0, green: 1, blue: 1})}:primary`)
-        entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
-        entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
-        player.sendMessage(`§e${messages.ClaimStart}`)
+      globalThis.particleData.push({
+        owner: player.name,
+        x: block.location.x,
+        y: block.location.y,
+        z: block.location.z,
+        color: {red: 0, green: 1, blue: 1}
       })
+      player.sendMessage(`§e${messages.ClaimStart}`)
     } else {
       player.sendMessage(`§e${messages.SubdivisionStart}`)
     }
@@ -94,6 +95,8 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     const leftZ = Math.round(tagLZ);
     const rightZ = Math.round(tagRZ);
 
+    let particleData = [];
+
     if(isSubdivideClaim) {
       // Responsible for claiming a subdivided claim inside a claimed land.
       const land = lands.find(d => d.id=== checkLand(block).id)
@@ -114,16 +117,12 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
       const corners = visualization({red: 1, green: 1, blue: 1}, {red: 0.5, green: 0.5, blue: 0.5}, { bounds: { lx: leftX, lz: leftZ, rx: rightX, rz: rightZ } })
 
       for(const pos of corners) {
-        system.run(() => {
-          const entity = world.getDimension(player.dimension.id).spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
-          entity?.addTag(`landlocker:${player.id}`)
-          if(JSON.parse(pos.color).red === 1 && JSON.parse(pos.color).green === 1 && JSON.parse(pos.color).blue === 1) {
-            entity?.addTag(`landlocker:border:${pos.color}:primary`)
-          } else {
-            entity?.addTag(`landlocker:border:${pos.color}`)
-          }
-          entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
-          entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
+        particleData.push({
+          owner: player.name,
+          x: pos.x,
+          y: pos.y,
+          z: pos.z,
+          color: JSON.parse(pos.color)
         })
       }
       player.sendMessage(`§a${messages.SubdivisionSuccess}`)
@@ -133,14 +132,8 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
       const isAdminMode = player.getTags().some(d => d === "shovelMode:adminClaims")
 
       // Remove the previous border entity
-      system.run(() => {
-        world.getDimension(player.dimension.id).getEntities().forEach(entity => {
-          if(entity.getTags().some(tag => tag === `landlocker:border:${JSON.stringify({red: 0, green: 1, blue: 1})}:primary`)) {
-            entity.remove()
-          }
-        })
-      })
-      
+      globalThis.particleData = globalThis.particleData.filter(d => (d.color.red !== 0 && d.color.green !== 1 && d.color.blue !== 1) && d.owner === player.name);
+
       // Some important filter stuff
       if(permutationClaimBlocks < 0 && !isAdminMode && !isSubdivideClaim) return player.sendMessage(`§c${messages.CreateClaimInsufficientBlocks.replace("{0}", Math.abs(permutationClaimBlocks))}`)
       if((((Math.abs(rightX - leftX) + 1) * (Math.abs(rightZ- leftZ) + 1)) < (config.LandLocker.Claims.MinSize*config.LandLocker.Claims.MinSize)) && !isAdminMode && !isSubdivideClaim) return player.sendMessage(`§c${messages.ResizeClaimInsufficientArea.replace("{0}", config.LandLocker.Claims.MinSize*config.LandLocker.Claims.MinSize)}`)
@@ -175,22 +168,18 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
       const corners = visualization({red: 1, green: 1, blue: 1}, secondaryBorder, { bounds: { lx: leftX, lz: leftZ, rx: rightX, rz: rightZ } })
 
       for(const pos of corners) {
-        system.run(() => {
-          const entity = world.getDimension(player.dimension.id).spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
-          entity?.addTag(`landlocker:${player.id}`)
-          if(JSON.parse(pos.color).red === 1 && JSON.parse(pos.color).green === 1 && JSON.parse(pos.color).blue === 1) {
-            entity?.addTag(`landlocker:border:${pos.color}:primary`)
-          } else {
-            entity?.addTag(`landlocker:border:${pos.color}`)
-          }
-          entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
-          entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
+        particleData.push({
+          owner: player.name,
+          x: pos.x,
+          y: pos.y,
+          z: pos.z,
+          color: JSON.parse(pos.color)
         })
       }
 
       player.sendMessage(`§a${messages.CreateClaimSuccess}`)
     }
-    
+    globalThis.particleData = particleData
     db.store("land", lands)
     event.cancel = true
   }

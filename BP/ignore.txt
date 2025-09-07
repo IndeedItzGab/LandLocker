@@ -1,4 +1,8 @@
-# LandLocker V1.0.8
-- Revamped administrative commands where it can now be only executed by a operator. Therefore, `Admin` tag is no longer necessary for these commands.
-- Fixed an issue where the particles won't show after having a claim in an unloaded chunks. Furthermore, annoying errors in the console have been removed.
-- Fixed unnoticable issue with overlapped particles where it doesn't get removed after a few seconds as expected.
+
+# LandLocker V1.0.9
+- Improvement with the performance when showing the claims. It will no longer relies on the custom entities location to spawn particles.
+- Revamped claim viewing
+  - When resizing claim with tool, it will now show all claim that the player own.
+  - When claiming a claim with tool, it will now only show the claimed land after claiming.
+- Fixed issue with resizing, claiming, and investigating blocks with tools (Buggy because of the update that I was not aware of).
+- Fixed issue where other players can resize your claim.

@@ -11,7 +11,9 @@ import "../../utilities/checkSubLand.js"
 import "../../utilities/overlapSubCheck.js"
 
 world.beforeEvents.playerBreakBlock.subscribe((e) => resize(e))
-world.beforeEvents.playerInteractWithBlock.subscribe((e) => resize(e))
+world.beforeEvents.playerInteractWithBlock.subscribe((e) => {
+  if(e.isFirstEvent) resize(e)
+})
 
 function resize(event) {
   const player = event.player
@@ -47,7 +49,7 @@ function resize(event) {
   let test = [];
   for(const data of lands) {
     const isOwner = data.owner?.toLowerCase() === player.name.toLowerCase();
-    if (!isOwner && (!data.owner && !isAdmin)) continue;
+    if (!isOwner || (!data.owner && !isAdmin)) continue;
     
     if(editSubData && data.id === editSubData.split(':')[1]) {
       let test2 = {}
@@ -122,26 +124,17 @@ function resize(event) {
 }
 
 function updateCache(player, lands) {
-  world.getDimension(player.dimension.id).getEntities().forEach(entity => {
-    if(entity.getTags().some(tag => tag === `landlocker:${player.id}`)) {
-      system.run(() => entity?.remove())
-    }
-  })
-
+  let particleData = []
   for(const data of lands) {
     for(const sub of data.subdivisions) {
       const subCorners = visualization({red: 1, green: 1, blue: 1}, {red: 0.3, green: 0.3, blue: 0.3}, sub)
       for(const pos of subCorners) {
-        system.run(() => {
-          const entity = world.getDimension(player.dimension.id).spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
-          entity?.addTag(`landlocker:${player.id}`)
-          if(pos.color.red === 1 && pos.color.green === 1 && pos.color.blue === 1) {
-            entity?.addTag(`landlocker:border:${pos.color}:primary`)
-          } else {
-            entity?.addTag(`landlocker:border:${pos.color}`)
-          }
-          entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
-          entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
+        particleData.push({
+          owner: player.name,
+          x: pos.x,
+          y: pos.y,
+          z: pos.z,
+          color: JSON.parse(pos.color)
         })
       }
     }
@@ -150,16 +143,17 @@ function updateCache(player, lands) {
       const secondaryBorder = !land.owner ? {red: 1, green: 0.6, blue: 0} : {red: 1, green: 1, blue: 0}
       const corners = visualization({red: 1, green: 1, blue: 1}, secondaryBorder, data)
       for(const pos of corners) {
-        system.run(() => {
-          const entity = world.getDimension(player.dimension.id).spawnEntity("landlocker:border", {x: pos.x + 0.5, y: pos.y, z: pos.z + 0.5})
-          entity?.addTag(`landlocker:${player.id}`)
-          entity?.addTag(`landlocker:border:${pos.color}`)
-          entity?.addEffect("minecraft:slowness", 99999, {amplifier: 255, showParticles: false})
-          entity?.addEffect("minecraft:invisibility", 99999, {amplifier: 255, showParticles: false})
+        particleData.push({
+          owner: player.name,
+          x: pos.x,
+          y: pos.y,
+          z: pos.z,
+          color: JSON.parse(pos.color)
         })
       }
     }
   }
+  globalThis.particleData = particleData;
 }
 
 function newSize(data, block, firstCorner) {

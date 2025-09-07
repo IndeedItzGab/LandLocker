@@ -1,6 +1,11 @@
 name: LandLocker
-version: V1.0.81
+version: V1.0.9
 status: STABLE
 message: |
-  # LandLocker V1.0.81
-  - Updated to support the latest version of Minecraft: Bedrock Edition.
+  # LandLocker V1.0.9
+  - Improvement with the performance when showing the claims. It will no longer relies on the custom entities location to spawn particles.
+  - Revamped claim viewing
+    - When resizing claim with tool, it will now show all claim that the player own.
+    - When claiming a claim with tool, it will now only show the claimed land after claiming.
+  - Fixed issue with resizing, claiming, and investigating blocks with tools (Buggy because of the update that I was not aware of).
+  - Fixed issue where other players can resize your claim.
