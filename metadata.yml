@@ -1,6 +1,6 @@
 name: LandLocker
-version: V1.1.0
+version: V1.1.1
 status: STABLE
 message: |
-  # LandLocker V1.1.0
-  - Fixed compatibility issues with Minecraft 1.21.111 and above.
+  # LandLocker V1.1.1
+  - The pack will now automatically support manifest updates. Therefore, this pack supports minecraft bedrock (1.21.120) and above without further manual manifest updates.
