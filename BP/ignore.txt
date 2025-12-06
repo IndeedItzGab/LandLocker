@@ -1,8 +1,3 @@
 
-# LandLocker V1.0.9
-- Improvement with the performance when showing the claims. It will no longer relies on the custom entities location to spawn particles.
-- Revamped claim viewing
-  - When resizing claim with tool, it will now show all claim that the player own.
-  - When claiming a claim with tool, it will now only show the claimed land after claiming.
-- Fixed issue with resizing, claiming, and investigating blocks with tools (Buggy because of the update that I was not aware of).
-- Fixed issue where other players can resize your claim.
+# LandLocker 1.1.2
+- Fixed an issue where your land get removed for no reason. This fix **HAS A DOWNSIDE**, if you upgrade your landlocker into this version. All your data will lose because we used a different storage system.

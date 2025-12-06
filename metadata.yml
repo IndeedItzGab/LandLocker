@@ -1,6 +1,6 @@
 name: LandLocker
-version: V1.1.1
+version: V1.1.2
 status: STABLE
 message: |
-  # LandLocker V1.1.1
-  - The pack will now automatically support manifest updates. Therefore, this pack supports minecraft bedrock (1.21.120) and above without further manual manifest updates.
+  # LandLocker 1.1.2
+  - Fixed an issue where your land get removed for no reason. This fix **HAS A DOWNSIDE**, if you upgrade your landlocker into this version. All your data will lose because we used a different storage system.
