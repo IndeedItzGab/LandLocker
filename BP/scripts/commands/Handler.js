@@ -13,6 +13,7 @@ import "./list/untrust.js"
 import "./list/claimexplosions.js"
 import "./list/basicclaims.js"
 import "./list/subdivideclaims.js"
+import "./list/trapped.js"
 
 // Admin Commands
 import "./list/adminCommands/deleteclaim.js"
@@ -26,5 +27,3 @@ import "./list/adminCommands/adminclaimslist.js"
 import "./list/adminCommands/transferclaim.js"
 import "./list/adminCommands/ignoreclaims.js"
 
-// Progress Command - means it's not finished.
-import "./list/trapped.js"

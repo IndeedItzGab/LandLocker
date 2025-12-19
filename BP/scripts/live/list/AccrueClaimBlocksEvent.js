@@ -1,9 +1,9 @@
 import { world, system } from "@minecraft/server"
-import * as db from "../../utilities/storage.js"
+import * as db from "../../utilities/DatabaseHandler.js"
 import { config } from "../../config.js"
 
 // Deliver the accrued blocks per 5 minutes, dividing the given deliver value with 12. 
-globalThis.deliverAccruedBlocks = () => {
+globalThis.AccrueClaimBlocksEvent = () => {
   [...world.getPlayers()].forEach(player => {
     if(player.isIdle()) return;
     let playersList = db.fetch("landPlayersList", true)

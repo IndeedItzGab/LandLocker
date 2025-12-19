@@ -1,5 +1,5 @@
 import { world } from "@minecraft/server"
-import * as db from "./storage.js"
+import * as db from "./DatabaseHandler.js"
 
 globalThis.checkSubLand = (target) => {
   for(const data of db.fetch("land", true)) {

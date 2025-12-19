@@ -1,5 +1,5 @@
 import { world, system} from "@minecraft/server"
-import * as db from "../../utilities/storage.js"
+import * as db from "../../utilities/DatabaseHandler.js"
 
 world.afterEvents.playerLeave.subscribe((e) => {
   disableClaimExplosions(e.playerName)

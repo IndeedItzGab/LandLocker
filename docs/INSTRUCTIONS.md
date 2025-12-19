@@ -25,6 +25,6 @@ Not most of the host services provide the same mechanics as aternos. Therefore, 
     ```
     [
       "pack_id": "d796a57a-9e0d-49d7-be0d-6a5d7ddfd260",
-      "version": [ 1, 0, 81 ]
+      "version": [ 1, 1, 3 ]
     ]
     ```

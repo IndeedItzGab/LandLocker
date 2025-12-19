@@ -1,13 +1,13 @@
 import { world, system } from "@minecraft/server"
-import * as db from "../../utilities/storage.js" 
+import * as db from "../../utilities/DatabaseHandler.js" 
 import { messages } from "../../messages.js"
 import { config } from "../../config.js"
-import "../../utilities/overlapCheck.js"
-import "../../utilities/getTopBlock.js"
-import "../../utilities/claimBlocks.js"
-import "../../utilities/checkLand.js"
-import "../../utilities/checkSubLand.js"
-import "../../utilities/overlapSubCheck.js"
+import "../../utilities/OverlapLandValidation.js"
+import "../../utilities/FetchTopBlock.js"
+import "../../utilities/PlayerClaimBlocks.js"
+import "../../utilities/LandValidation.js"
+import "../../utilities/SubLandValidation.js"
+import "../../utilities/OverlapSubLandValidation.js"
 
 // The other function related to claiming land with shovel would be in show.js file.
 world.beforeEvents.playerInteractWithBlock.subscribe((event) => {

@@ -1,11 +1,7 @@
-import {
-  world,
-  system
-} from "@minecraft/server";
-import { registerCommand }  from "../../commandRegistry.js"
-import * as db from "../../../utilities/storage.js"
+import { registerCommand }  from "../../CommandRegistry.js"
+import * as db from "../../../utilities/DatabaseHandler.js"
 import { messages } from "../../../messages.js"
-import "../../../utilities/checkLand.js"
+import "../../../utilities/LandValidation.js"
 
 const commandInformation = {
   name: "transferclaim",

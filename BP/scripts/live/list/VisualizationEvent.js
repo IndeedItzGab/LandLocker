@@ -1,12 +1,11 @@
 import { world, system, MolangVariableMap } from "@minecraft/server"
-import * as db from "../../utilities/storage.js" 
-import "../../utilities/getTopBlock.js"
-import "../../utilities/visualization.js"
-import { messages } from "../../messages.js"
+import * as db from "../../utilities/DatabaseHandler.js" 
+import "../../utilities/FetchTopBlock.js"
+import "../../utilities/Visualization.js"
 import { config } from "../../config.js"
   
 
-globalThis.show = () => {
+globalThis.VisualizationEvent = () => {
   [...world.getPlayers()].forEach(player => {
     // Declaring Variables
     const inv = player.getComponent("inventory").container

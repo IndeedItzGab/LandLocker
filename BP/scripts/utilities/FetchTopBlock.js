@@ -1,5 +1,5 @@
 import { world } from "@minecraft/server";
-import * as db from "./storage.js";
+import * as db from "./DatabaseHandler.js";
 
 globalThis.getTopBlock = (location) => {
   const dimension = world.getDimension("overworld")

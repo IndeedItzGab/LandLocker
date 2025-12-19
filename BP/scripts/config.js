@@ -6,6 +6,8 @@ export const config = {
   },
   LandLocker: {
     Claims: {
+      ProtectCreatures: true,
+      EnderPearlsRequireAccessTrust: true,
       InitialBlocks: 100,
       Claim_Blocks_Accrued_Per_Hour: {
         Default: 100
@@ -15,9 +17,9 @@ export const config = {
         Default: 80000
       },
       AutomaticNewPlayerClaimsRadius: 4,
-      MinSize: 10, // 10 × 10 = 100 Minimum Claim blocks must used in a claim. To let anyone make a small claims set it to 1
+      MinSize: 10,
       MinWide: 5,
-      InvestigationTool: "minecraft:stick", // **
+      InvestigationTool: "minecraft:stick",
       ModificationTool: "minecraft:golden_shovel",
     },
     PVP: {

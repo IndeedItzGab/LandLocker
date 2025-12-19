@@ -2,11 +2,10 @@ import {
   world,
   system
 } from "@minecraft/server";
-import { registerCommand }  from "../commandRegistry.js"
-import * as db from "../../utilities/storage.js"
+import { registerCommand }  from "../CommandRegistry.js"
 import { messages } from "../../messages.js"
-import "../../utilities/checkLand.js"
-import "../../utilities/getTopBlock.js"
+import "../../utilities/LandValidation.js"
+import "../../utilities/FetchTopBlock.js"
 
 const commandInformation = {
   name: "trapped",
@@ -20,7 +19,7 @@ registerCommand(commandInformation, (origin) => {
   const player = origin.sourceEntity
   const isAdmin = player.playerPermissionLevel === 2
   const c = checkLand(player)
-  const isOwner = c.owner === player.name.toLowerCase()
+  const isOwner = c?.owner === player.name.toLowerCase()
   
   if(isOwner || !c || c.publicPermissions.fullTrust || c.members.some(m => m.name === player.name.toLowerCase() && m.permissions.fullTrust) || (isAdmin && player.hasTag("landlocker:ignoringClaims"))) return player.sendMessage(`§c${messages.NotTrappedHere}`)
   player.sendMessage(`§6${messages.RescuePending}`)

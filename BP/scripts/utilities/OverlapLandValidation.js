@@ -1,6 +1,6 @@
 import { world, system } from "@minecraft/server";
-import * as db from "./storage.js";
-import "./visualization.js"
+import * as db from "./DatabaseHandler.js";
+import "./Visualization.js"
 
 globalThis.overlapCheck = (player, lx = null, rx = null, lz = null, rz = null, landID = null) => {
   lx = lx ? lx : player.location.x-5

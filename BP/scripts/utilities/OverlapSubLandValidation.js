@@ -1,6 +1,6 @@
 import { world, system } from "@minecraft/server";
-import * as db from "./storage.js";
-import "./visualization.js"
+import * as db from "./DatabaseHandler.js";
+import "./Visualization.js"
 
 globalThis.overlapSubCheck = (player, lx = null, rx = null, lz = null, rz = null, land, subIndex) => {
 

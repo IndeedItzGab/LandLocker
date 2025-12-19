@@ -1,4 +1,4 @@
-import * as db from "../storage.js"
+import * as db from "../DatabaseHandler.js"
 
 
 globalThis.updatePermissions = (land, targetName, type, player, isAllLands) => {

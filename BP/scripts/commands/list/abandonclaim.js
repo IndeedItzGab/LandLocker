@@ -1,13 +1,9 @@
-import {
-  world,
-  system
-} from "@minecraft/server";
-import { registerCommand }  from "../commandRegistry.js"
+import { registerCommand }  from "../CommandRegistry.js"
 import { messages } from "../../messages.js"
-import * as db from "../../utilities/storage.js"
-import "../../utilities/claimBlocks.js"
-import "../../utilities/checkLand.js"
-import "../../utilities/checkSubLand.js"
+import * as db from "../../utilities/DatabaseHandler.js"
+import "../../utilities/PlayerClaimBlocks.js"
+import "../../utilities/LandValidation.js"
+import "../../utilities/SubLandValidation.js"
 
 const commandInformation = {
   name: "abandonclaim",

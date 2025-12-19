@@ -16,6 +16,7 @@ This page provides details about configuring LandLocker from its configuration f
     - [Default claim radius uses by /land:claim](#default-claim-radius-uses-by-landclaim)
     - [Minimum size of a claim](#minimum-size-of-a-claim)
     - [Minimum wide of a claim](#minimum-wide-of-a-claim)
+    - [](#)
   - [PVP](#pvp-settings)
     - [Combat Timeout](#combat-timeout)
     - [Protect players whenever they were in a claim](#protect-players-whenever-they-were-in-a-claim)
@@ -66,9 +67,14 @@ When a player claimed a land using `/land:claim` without providing radius. The v
 The minimum size for sides of a claim. If you make this very small, griefers may run around creating very tiny claims all over the place just to annoy other players. And then you’ll have to come clean it up. Note that administrative claims (`/land:adminclaims`mode) ignore this rule, so you can use that together with `/land:transferclaim` to create smaller claims on a claim-by-claim basis, as needed.
 
 ### Minimum wide of a claim
-` Claims.MinWide: 5`
+`Claims.MinWide: 5`
 
 The minimum wide of a claim. If you make this very small, player would be able to make a claim that's very thin. Note that administrative claims ignore this rule, so you can use that together with `/land:transferclaim` to create a thin claims on a claim-by-claim bases, as needes.
+
+### No using ender pearls in lands
+`Claims.EnderPearlsRequireAccessTrust: true`
+
+Enabling this option will prevent players from using ender pearls inside the claim without a proper permission to do so. Therefore, players must have "Access Trust" permission to use ender pearls within a claim land.
 
 ## PVP Setting
 ### Combat Timeout

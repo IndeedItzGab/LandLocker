@@ -1,14 +1,14 @@
 import { world, system } from "@minecraft/server"
-import * as db from "../../utilities/storage.js" 
+import * as db from "../../utilities/DatabaseHandler.js" 
 import { messages } from "../../messages.js"
 import { config } from "../../config.js"
-import "../../utilities/checkLand.js"
-import "../../utilities/claimBlocks.js"
-import "../../utilities/getTopBlock.js"
-import "../../utilities/visualization.js"
-import "../../utilities/overlapCheck.js"
-import "../../utilities/checkSubLand.js"
-import "../../utilities/overlapSubCheck.js"
+import "../../utilities/LandValidation.js"
+import "../../utilities/PlayerClaimBlocks.js"
+import "../../utilities/FetchTopBlock.js"
+import "../../utilities/Visualization.js"
+import "../../utilities/OverlapLandValidation.js"
+import "../../utilities/SubLandValidation.js"
+import "../../utilities/OverlapSubLandValidation.js"
 
 world.beforeEvents.playerBreakBlock.subscribe((e) => resize(e))
 world.beforeEvents.playerInteractWithBlock.subscribe((e) => {

@@ -1,5 +1,5 @@
 import { world } from "@minecraft/server"
-import "../../utilities/checkLand.js"
+import "../../utilities/LandValidation.js"
 
 world.beforeEvents.explosion.subscribe((event) => {
   let affectedBlocks = event.getImpactedBlocks().filter(block => {

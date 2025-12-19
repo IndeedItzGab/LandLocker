@@ -1,6 +1,6 @@
 import { world, system } from "@minecraft/server"
-import * as db from "../../utilities/storage.js"
-import "../../utilities/checkLand.js"
+import * as db from "../scripts/utilities/DatabaseHandler.js"
+import "../scripts/utilities/LandValidation.js"
 
 world.beforeEvents.playerBreakBlock.subscribe(event => {
   const block = event.block

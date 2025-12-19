@@ -1,7 +1,7 @@
 import { world } from "@minecraft/server"
 import { config } from "../../config.js"
 import { messages } from "../../messages.js"
-import "../../utilities/checkLand.js"
+import "../../utilities/LandValidation.js"
 
 world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   if(!event.isFirstEvent) return;
