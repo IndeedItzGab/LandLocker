@@ -25,6 +25,7 @@ While we currently developing LandLocker, these are the following available feat
 - Trust a player if they can do anything in your land, access your containers like chests, let them only use the buttons and levers, or grant them a permission to share their level of permissions.
 - Combat is disabled to a player with a empty inventory.
 - Claim a subdivided claim within a parent claim.
+- Protect entities in a claim land from unauthorized damages.
 - Custom slash commands, see [Commands List](docs/COMMANDS.md)
 
 more features will be added in the near future!
