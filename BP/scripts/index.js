@@ -1,7 +1,7 @@
-import "./utilities/prototype/handler.js"
-import "./commands/handler.js"
-import "./events/handler.js"
-import "./live/handler.js"
+import "./utilities/prototype/Handler.js"
+import "./commands/Handler.js"
+import "./events/Handler.js"
+import "./live/Handler.js"
 
 globalThis.particleData = [];
 

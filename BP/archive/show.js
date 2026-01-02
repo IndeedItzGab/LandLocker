@@ -1,6 +1,6 @@
 import { world, system } from "@minecraft/server"
-import * as db from "../../utilities/storage.js" 
-import "../../utilities/getTopBlock.js"
+import * as db from "../../utilities/DatabaseHandler.js" 
+import "../../utilities/FetchTopBlock.js"
 import "../../utilities/visualization.js"
 import { messages } from "../../messages.js"
 import { config } from "../../config.js"

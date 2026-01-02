@@ -1,6 +1,0 @@
-  # LandLocker 1.1.3
-  - No unauthorize damage to entities within a land
-  - Improvement with cancelling damages
-  - Fixed `/trapped` replying with an error when the player isn't in a claim land.
-  - Access trust permission is now required to use ender pearl inside the claim land.
-  - Cleaned code and files
