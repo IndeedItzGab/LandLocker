@@ -1,7 +1,8 @@
 import {
+  world,
   system
 } from "@minecraft/server";
-import { registerCommand }  from "../CommandRegistry.js"
+import { registerCommand }  from "../commandRegistry.js"
 import { messages } from "../../messages.js"
 import { config } from "../../config.js"
 

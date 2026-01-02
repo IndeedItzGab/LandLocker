@@ -1,5 +1,5 @@
 import { world, system } from "@minecraft/server"
-import * as db from "../scripts/utilities/DatabaseHandler.js" 
+import * as db from "../scripts/utilities/storage.js" 
 
 globalThis.overlapOutlineRemoval = () => {
   const allOverlapCacheData = db.find("overlapCacheBlocks:") //world.scoreboard.getObjectives().filter(data => data.id.includes("overlapCacheBlocks:"))

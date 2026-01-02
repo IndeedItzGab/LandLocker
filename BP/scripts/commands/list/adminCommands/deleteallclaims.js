@@ -1,5 +1,9 @@
-import { registerCommand }  from "../../CommandRegistry.js"
-import * as db from "../../../utilities/DatabaseHandler.js"
+import {
+  world,
+  system
+} from "@minecraft/server";
+import { registerCommand }  from "../../commandRegistry.js"
+import * as db from "../../../utilities/storage.js"
 import { messages } from "../../../messages.js"
 
 const commandInformation = {

@@ -1,9 +1,13 @@
-import { registerCommand }  from "../CommandRegistry.js"
+import {
+  world,
+  system
+} from "@minecraft/server";
+import { registerCommand }  from "../commandRegistry.js"
 import { messages } from "../../messages.js"
-import * as db from "../../utilities/DatabaseHandler.js"
-import "../../utilities/PlayerClaimBlocks.js"
-import "../../utilities/LandValidation.js"
-import "../../utilities/SubLandValidation.js"
+import * as db from "../../utilities/storage.js"
+import "../../utilities/claimBlocks.js"
+import "../../utilities/checkLand.js"
+import "../../utilities/checkSubLand.js"
 
 const commandInformation = {
   name: "abandonclaim",
@@ -32,7 +36,7 @@ registerCommand(commandInformation, (origin) => {
       d.bounds.rz === sub.data.bounds.rz
     ))
   } else {
-    lands = lands.filter(d => d.id !== c?.id && d.owner === player.name.toLowerCase())
+    lands = lands.filter(d => !(d.id === c?.id && d.owner === player.name.toLowerCase()))
   }
   
   player.sendMessage(`§a${messages.AbandonSuccess.replace("{0}", claimBlocks(player))}`)

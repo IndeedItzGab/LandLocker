@@ -1,11 +1,15 @@
-import { registerCommand }  from "../CommandRegistry.js"
-import * as db from "../../utilities/DatabaseHandler.js"
+import {
+  world,
+  system
+} from "@minecraft/server";
+import { registerCommand }  from "../commandRegistry.js"
+import * as db from "../../utilities/storage.js"
 import { messages } from "../../messages.js"
-import "../../utilities/PlayerClaimBlocks.js"
-import "../../utilities/LandValidation.js"
-import "../../utilities/OverlapLandValidation.js"
-import "../../utilities/RandomIDGenerator.js"
-import "../../utilities/FetchTopBlock.js"
+import "../../utilities/claimBlocks.js"
+import "../../utilities/checkLand.js"
+import "../../utilities/overlapCheck.js"
+import "../../utilities/generateID.js"
+import "../../utilities/getTopBlock.js"
 
 const commandInformation = {
   name: "claimexplosion",
