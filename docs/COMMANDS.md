@@ -1,7 +1,7 @@
 # Available Commands
 Default commands namespace: `land`
 
-## Non-Operator/Admin Commands
+## Non-Operator Commands
 These commands are meant to be use by anyone with or without the permission level of a operator.
 |NAME                 |ALIASES                |PARAMETERS              | DESCRIPTION                                                           |
 |---------------------|-----------------------|------------------------|-----------------------------------------------------------------------|

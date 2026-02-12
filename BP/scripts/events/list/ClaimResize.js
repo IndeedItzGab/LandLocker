@@ -140,6 +140,7 @@ function updateCache(player, lands) {
     }
 
     for(const land of lands) {
+      if(land.owner !== player.name.toLowerCase()) continue; // Avoid visualizing other players claim causing fps drops
       const secondaryBorder = !land.owner ? {red: 1, green: 0.6, blue: 0} : {red: 1, green: 1, blue: 0}
       const corners = visualization({red: 1, green: 1, blue: 1}, secondaryBorder, data)
       for(const pos of corners) {
