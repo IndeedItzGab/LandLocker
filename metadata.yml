@@ -5,7 +5,7 @@ message: |
   # LandLocker 1.1.4
   - No unauthorize damage to entities within a land
   - Improvement with cancelling damages
-  - Fixed `/trapped` replying with an error when the player isn't in a claim land.
-  - Removed FPS drops happening after a player land claim was resized
+  - Fixed `/trapped` replying with an error when the player is not in a claim land.
+  - Removed FPS drops happening after a player\'s land claim was resized
   - Access trust permission is now required to use ender pearl inside the claim land.
   - Cleaned code and files
