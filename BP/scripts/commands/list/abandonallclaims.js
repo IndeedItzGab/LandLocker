@@ -19,10 +19,17 @@ const commandInformation = {
   ]
 }
 
+let cooldowns = new Map()
 registerCommand(commandInformation, (origin, args) => {
-  
 
   const player = origin.sourceEntity
+  const setting = db.fetch("landlocker:setting")
+
+  // Cooldown
+  const cooldown = cooldowns.get(player.id)
+  if(cooldown?.tick >= system.currentTick) {
+    return player.sendMessage(`§c${messages.CommandCooldown.replaceAll("{0}", (cooldown.tick - system.currentTick) / 20)}`)
+  }
 
   if(player.hasTag("deleteAllLandQuery") && args === "confirm") {
     system.run(() => {
@@ -31,6 +38,7 @@ registerCommand(commandInformation, (origin, args) => {
     db.store("land", db.fetch("land", true).filter(data => data.owner !== player.name.toLowerCase()));
     let remainingClaimBlocks = claimBlocks(player)
     player.sendMessage(`§a${messages.SuccessfulAbandon.replace("{0}", remainingClaimBlocks)}`)
+    cooldowns.set(player.id, {tick: system.currentTick + setting.commands["cooldown"]*20})
   } else {
     system.run(() => {
       player.addTag(`deleteAllLandQuery`)

@@ -7,6 +7,7 @@ import "../../utilities/OverlapLandValidation.js"
 import "../../utilities/RandomIDGenerator.js"
 import "../../utilities/FetchTopBlock.js"
 import "../../utilities/SubLandValidation.js"
+import { system } from "@minecraft/server"
 
 const commandInformation = {
   name: "trustlist",
@@ -15,9 +16,20 @@ const commandInformation = {
   usage:[]
 }
 
+let cooldowns = new Map()
 registerCommand(commandInformation, (origin) => {
 
   const player = origin.sourceEntity
+  const setting = db.fetch("landlocker:setting")
+  
+  // Cooldown
+  const cooldown = cooldowns.get(player.id)
+  if(cooldown?.tick >= system.currentTick) {
+    return player.sendMessage(`§c${messages.CommandCooldown.replaceAll("{0}", (cooldown.tick - system.currentTick) / 20)}`)
+  } else {
+    cooldowns.set(player.id, {tick: system.currentTick + setting.commands["cooldown"]*20})
+  }
+
   const c = checkLand(player)
   const s = checkSubLand(player)
 

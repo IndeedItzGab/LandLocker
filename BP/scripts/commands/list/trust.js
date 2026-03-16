@@ -4,6 +4,7 @@ import "../../utilities/LandValidation.js"
 import "../../utilities/SubLandValidation.js"
 import "../../utilities/trustUtility/TrustPermissionHandler.js"
 import { messages } from "../../messages.js"
+import { system } from "@minecraft/server"
 
 const commandInformation = {
   name: "trust",
@@ -18,11 +19,21 @@ const commandInformation = {
   ]
 }
 
-
+let cooldowns = new Map()
 registerCommand(commandInformation, (origin, targetPlayerName) => {
   if(origin.sourceBlock || origin.initiator || origin.sourceEntity.typeId !== "minecraft:player") return { status: 1 }
   
   const player = origin.sourceEntity
+  const setting = db.fetch("landlocker:setting")
+  
+  // Cooldown
+  const cooldown = cooldowns.get(player.id)
+  if(cooldown?.tick >= system.currentTick) {
+    return player.sendMessage(`§c${messages.CommandCooldown.replaceAll("{0}", (cooldown.tick - system.currentTick) / 20)}`)
+  } else {
+    cooldowns.set(player.id, {tick: system.currentTick + setting.commands["cooldown"]*20})
+  }
+
   const isAdmin = player.playerPermissionLevel
   const c = checkLand(player)
   const s = checkSubLand(player)

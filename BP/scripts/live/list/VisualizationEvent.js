@@ -2,7 +2,6 @@ import { world, system, MolangVariableMap } from "@minecraft/server"
 import * as db from "../../utilities/DatabaseHandler.js" 
 import "../../utilities/FetchTopBlock.js"
 import "../../utilities/Visualization.js"
-import { config } from "../../config.js"
   
 
 globalThis.VisualizationEvent = () => {
@@ -15,8 +14,9 @@ globalThis.VisualizationEvent = () => {
     const adminClaim = lands.filter(data => data.owner === null && !data.owner && isAdmin)
     const land = lands.filter(data => data.owner?.toLowerCase() === player.name.toLowerCase()).concat(adminClaim)
     const dimension = player.dimension
+    const setting = db.fetch("landlocker:setting")
     
-    if(heldItem?.typeId === config.LandLocker.Claims.ModificationTool) {
+    if(heldItem?.typeId === setting.claims["modificationTool"]) {
       globalThis.particleData.forEach(data => {
         const molangVars = new MolangVariableMap();
         molangVars.setFloat("variable.emitter_lifetime", 1);

@@ -6,6 +6,7 @@ import "../../utilities/LandValidation.js"
 import "../../utilities/OverlapLandValidation.js"
 import "../../utilities/RandomIDGenerator.js"
 import "../../utilities/FetchTopBlock.js"
+import { system } from "@minecraft/server"
 
 const commandInformation = {
   name: "claimexplosion",
@@ -15,10 +16,21 @@ const commandInformation = {
   ]
 }
 
+let cooldowns = new Map()
 registerCommand(commandInformation, (origin, args1) => {
   
 
   const player = origin.sourceEntity
+  const setting = db.fetch("landlocker:setting")
+  
+  // Cooldown
+  const cooldown = cooldowns.get(player.id)
+  if(cooldown?.tick >= system.currentTick) {
+    return player.sendMessage(`§c${messages.CommandCooldown.replaceAll("{0}", (cooldown.tick - system.currentTick) / 20)}`)
+  } else {
+    cooldowns.set(player.id, {tick: system.currentTick + setting.commands["cooldown"]*20})
+  }
+
   const c = checkLand(player)
   const isOwner = c?.owner?.toLowerCase() === player.name.toLowerCase()
   let lands = db.fetch("land", true)

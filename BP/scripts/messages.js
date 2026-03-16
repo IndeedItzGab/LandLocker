@@ -2,6 +2,7 @@
 // All this messages are just similar with GriefPrevention plugin.
 
 export const messages = {
+  CommandCooldown: "You can't use this command for {0} seconds yet!",
   RespectingClaims: "Now respecting claims.",
   IgnoringClaims: "Now ignoring claims.",
   // **

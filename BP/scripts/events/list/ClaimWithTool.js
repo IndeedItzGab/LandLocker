@@ -1,7 +1,6 @@
 import { world, system } from "@minecraft/server"
 import * as db from "../../utilities/DatabaseHandler.js" 
 import { messages } from "../../messages.js"
-import { config } from "../../config.js"
 import "../../utilities/OverlapLandValidation.js"
 import "../../utilities/FetchTopBlock.js"
 import "../../utilities/PlayerClaimBlocks.js"
@@ -15,9 +14,10 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   const player = event.player
   const block = event.block
   const isAdmin = player.playerPermissionLevel === 2
+  const setting = db.fetch("landlocker:setting")
   // Early return to avoid further execution causing to decrease the performance of landlocker
   const usedItem = player?.getComponent("inventory")?.container?.getItem(player?.selectedSlotIndex)
-  if(usedItem?.typeId !== config.LandLocker.Claims.ModificationTool) return;
+  if(usedItem?.typeId !== setting.claims["modificationTool"]) return;
   
   // Detect whether the player is resizing a subdivided claim.
   if(player.getTags().some(d => d.startsWith("isEditingSub:"))) return;
@@ -95,6 +95,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     const leftZ = Math.round(tagLZ);
     const rightZ = Math.round(tagRZ);
 
+
     let particleData = [];
 
     if(isSubdivideClaim) {
@@ -136,8 +137,9 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
 
       // Some important filter stuff
       if(permutationClaimBlocks < 0 && !isAdminMode && !isSubdivideClaim) return player.sendMessage(`§c${messages.CreateClaimInsufficientBlocks.replace("{0}", Math.abs(permutationClaimBlocks))}`)
-      if((((Math.abs(rightX - leftX) + 1) * (Math.abs(rightZ- leftZ) + 1)) < (config.LandLocker.Claims.MinSize*config.LandLocker.Claims.MinSize)) && !isAdminMode && !isSubdivideClaim) return player.sendMessage(`§c${messages.ResizeClaimInsufficientArea.replace("{0}", config.LandLocker.Claims.MinSize*config.LandLocker.Claims.MinSize)}`)
-      if((leftX + config.LandLocker.Claims.MinWide > rightX || leftZ + config.LandLocker.Claims.MinWide > rightZ) && !isAdminMode && !isSubdivideClaim) return player.sendMessage(`§c${messages.NewClaimTooNarrow.replace("{0}", config.LandLocker.Claims.MinWide)}`)
+      if((((Math.abs(rightX - leftX) + 1) * (Math.abs(rightZ- leftZ) + 1)) < (setting.claims["minSize"]*setting.claims["minSize"])) && !isAdminMode && !isSubdivideClaim) return player.sendMessage(`§c${messages.ResizeClaimInsufficientArea.replace("{0}", setting.claims["minSize"]*setting.claims["minSize"])}`)
+      if((leftX + setting.claims["minWide"] > rightX || leftZ + setting.claims["minWide"] > rightZ) && !isAdminMode && !isSubdivideClaim) return player.sendMessage(`§c${messages.NewClaimTooNarrow.replace("{0}", setting.claims["minWide"])}`)
+
       if(!isSubdivideClaim && overlapCheck(player, leftX, rightX, leftZ, rightZ)) return player.sendMessage(`§c${messages.CreateClaimFailOverlapShort}`)
 
       lands.push({

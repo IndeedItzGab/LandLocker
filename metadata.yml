@@ -1,11 +1,9 @@
 name: LandLocker
-version: V1.1.4
+version: V1.1.5
 status: STABLE
 message: |
-  # LandLocker 1.1.4
-  - No unauthorize damage to entities within a land
-  - Improvement with cancelling damages
-  - Fixed `/trapped` replying with an error when the player is not in a claim land.
-  - Removed FPS drops happening after a player land claim was resized
-  - Access trust permission is now required to use ender pearl inside the claim land.
-  - Cleaned code and files
+  # LandLocker 1.1.5
+  - Added in-game configurations to provide further support for realms. Therefore, file configuring is now removed.
+  - Added slash commands cooldown.
+  - Added default minimum size on land claims at resized.
+  - Adjustment with default minimum size.

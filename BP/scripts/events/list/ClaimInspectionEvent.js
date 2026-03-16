@@ -1,15 +1,16 @@
 import { world } from "@minecraft/server"
-import { config } from "../../config.js"
 import { messages } from "../../messages.js"
 import "../../utilities/LandValidation.js"
+import * as db from "../../utilities/DatabaseHandler.js"
 
 world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   if(!event.isFirstEvent) return;
   const player = event.player
   const block = event.block
   const equipment = event.itemStack?.typeId
+  const setting = db.fetch("landlocker:setting")
 
-  if(equipment === config.LandLocker.Claims.InvestigationTool) {
+  if(equipment === setting.claims["investigationTool"]) {
     const land = checkLand(block)
     if(!land) return player.sendMessage(`§b${messages.BlockNotClaimed}`)
     let owner = land.owner ? land.owner : messages.OwnerNameForAdminClaims

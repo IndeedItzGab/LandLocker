@@ -1,4 +1,4 @@
-import { world, system } from "@minecraft/server"
+import { world } from "@minecraft/server"
 import { messages } from "../../messages.js"
 
 world.afterEvents.playerInventoryItemChange.subscribe((event) => {

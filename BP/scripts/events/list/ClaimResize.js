@@ -1,7 +1,6 @@
 import { world, system } from "@minecraft/server"
 import * as db from "../../utilities/DatabaseHandler.js" 
 import { messages } from "../../messages.js"
-import { config } from "../../config.js"
 import "../../utilities/LandValidation.js"
 import "../../utilities/PlayerClaimBlocks.js"
 import "../../utilities/FetchTopBlock.js"
@@ -16,13 +15,14 @@ world.beforeEvents.playerInteractWithBlock.subscribe((e) => {
 })
 
 function resize(event) {
+  const setting = db.fetch("landlocker:setting")
   const player = event.player
   const block = event.block
   const isAdmin = player.playerPermissionLevel === 2
   const editData = player.getTags().find(v => v.startsWith("editingLand:"))
   const editSubData = player.getTags().find(v => v.startsWith("isEditingSub:"))
   const usedItem = player?.getComponent("inventory")?.container?.getItem(player?.selectedSlotIndex)
-  if(usedItem?.typeId !== config.LandLocker.Claims.ModificationTool) return;
+  if(usedItem?.typeId !== setting.claims["modificationTool"]) return;
   
   let lands = db.fetch("land", true)
   
@@ -80,9 +80,13 @@ function resize(event) {
         })
       
         // Check if the player have enough claim blocks.
+        const isAdminMode = player.getTags().some(d => d === "shovelMode:adminClaims")
+        const isSubdivideClaim = player.hasTag("shovelMode:subdivisionClaims")
         const permutationClaimBlocks = claimBlocks(player, data.id) - (Math.abs(data.bounds.rx - data.bounds.lx) + 1) * (Math.abs(data.bounds.rz - data.bounds.lz) + 1)
         if(permutationClaimBlocks < 0 && data.owner) return player.sendMessage(`§c${messages.ResizeNeedMoreBlocks.replace("{0}", Math.abs(permutationClaimBlocks))}`)
-        
+        if((((Math.abs(data.bounds.rx - data.bounds.lx) + 1) * (Math.abs(data.bounds.rz- data.bounds.lz) + 1)) < (setting.claims["minSize"]*setting.claims["minSize"])) && !isAdminMode && !isSubdivideClaim) return player.sendMessage(`§c${messages.ResizeClaimInsufficientArea.replace("{0}", setting.claims["minSize"]*setting.claims["minSize"])}`)
+        if((data.bounds.lx + setting.claims["minWide"] > data.bounds.rx || data.bounds.lz + setting.claims["minWide"] > data.bounds.rz) && !isAdminMode && !isSubdivideClaim) return player.sendMessage(`§c${messages.NewClaimTooNarrow.replace("{0}", setting.claims["minWide"])}`)
+
         // If it overlaps with other claim then it stop updating the land size.
         const overlap = overlapCheck(player, data.bounds.lx, data.bounds.rx, data.bounds.lz, data.bounds.rz, data.id)
         if(overlap) return player.sendMessage(`§c${messages.ResizeFailOverlap}`) 

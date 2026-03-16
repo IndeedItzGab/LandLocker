@@ -1,7 +1,6 @@
 import {
   system
 } from "@minecraft/server";
-import { config } from "../config.js"
 
 let commands = []
 export function registerCommand(comInfo, callback) {
@@ -25,7 +24,7 @@ export function registerCommand(comInfo, callback) {
     comInfo?.aliases?.forEach(alias => {
       commands.push({
         commandInformation: {
-          name: `${config.commands.namespace}:${alias}`,
+          name: `landlocker:${alias}`,
           description: comInfo?.description,
           permissionLevel: comInfo?.permissionLevel || 0,
           cheatsRequired: false,
@@ -39,7 +38,7 @@ export function registerCommand(comInfo, callback) {
     // Main Command Handler
     commands.push({
       commandInformation: {
-        name: `${config.commands.namespace}:${comInfo?.name}`,
+        name: `landlocker:${comInfo?.name}`,
         description: comInfo?.description,
         permissionLevel: comInfo?.permissionLevel || 0,
         cheatsRequired: false,

@@ -1,11 +1,12 @@
 import { world, Player, system } from "@minecraft/server"
 import { messages } from "../../messages.js"
-import { config } from "../../config.js"
 import * as db from "../../utilities/DatabaseHandler.js"
-const CombatTimeoutSeconds = config.LandLocker.PVP.CombatTimeoutSeconds
 
 world.beforeEvents.entityHurt.subscribe((event) => {
   if(event.damageSource.damagingEntity?.typeId !== "minecraft:player" || event.hurtEntity?.typeId !== "minecraft:player") return
+
+  const setting = db.fetch("landlocker:setting")
+  const CombatTimeoutSeconds = setting.pvp["combatTimeoutSeconds"]
   const attacker = event.damageSource.damagingEntity
   const victim = event.hurtEntity
 
@@ -13,11 +14,12 @@ world.beforeEvents.entityHurt.subscribe((event) => {
   const victimData = combatData.find(d => d.name === event.hurtEntity.name)
   const suspectData = combatData.find(d => d.name === event.damageSource.damagingEntity.name)
 
+  
   try {
     if(suspectData?.time <= system.currentTick || !suspectData) {
       // Check if attacker is in a protected land claim
       const land = checkLand(attacker)
-      const isProtected = land?.owner ? config.LandLocker.PVP.ProtectPlayersInLandClaims.PlayerOwnedClaims : config.LandLocker.PVP.ProtectPlayersInLandClaims.AdministrativeClaims
+      const isProtected = land?.owner ? claims.pvp.protectPlayersInLandClaims["playerOwnedClaims"] : claims.pvp.protectPlayersInLandClaims["administrativeClaims"]
       if(isProtected && land) {
         event.cancel = true;
         return attacker.sendMessage(`§c${messages.CantFightWhileImmune}`)
@@ -34,7 +36,7 @@ world.beforeEvents.entityHurt.subscribe((event) => {
     if(victimData?.time <= system.currentTick || !victimData) {
       // Check if victim is in a protected land claim
       const land = checkLand(victim)
-      const isProtected = land?.owner ? config.LandLocker.PVP.ProtectPlayersInLandClaims.PlayerOwnedClaims : config.LandLocker.PVP.ProtectPlayersInLandClaims.AdministrativeClaims
+      const isProtected = land?.owner ? claims.pvp.protectPlayersInLandClaims["playerOwnedClaims"] : claims.pvp.protectPlayersInLandClaims["administrativeClaims"]
       if(isProtected && land) {
         event.cancel = true;
         return attacker.sendMessage(`§c${messages.PlayerInPvPSafeZone}`)

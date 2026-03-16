@@ -3,7 +3,7 @@ import {
 } from "@minecraft/server";
 import { registerCommand }  from "../../CommandRegistry.js"
 import { messages } from "../../../messages.js"
-import { config } from "../../../config.js"
+import * as db from "../../../utilities/DatabaseHandler.js"
 
 const commandInformation = {
   name: "adminclaims",
@@ -16,9 +16,9 @@ const commandInformation = {
 registerCommand(commandInformation, (origin) => {
   
   const player = origin.sourceEntity
-
+  const setting = db.fetch("landlocker:setting")
   const usedItem = player?.getComponent("inventory")?.container?.getItem(player?.selectedSlotIndex)
-  if(usedItem?.typeId !== config.LandLocker.Claims.ModificationTool) return player.sendMessage(`§c${messages.MustHoldModificationToolForThat}`)
+  if(usedItem?.typeId !== setting.claims["modificationTool"]) return player.sendMessage(`§c${messages.MustHoldModificationToolForThat}`)
   system.run(() => {
     player.removeTag("shovelMode:subdivisionClaims")
     player.addTag("shovelMode:adminClaims")

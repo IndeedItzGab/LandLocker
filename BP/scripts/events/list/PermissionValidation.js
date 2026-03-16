@@ -1,8 +1,8 @@
 import { world } from "@minecraft/server"
 import { messages } from "../../messages.js"
-import { config } from "../../config.js"
 import "../../utilities/LandValidation.js"
 import "../../utilities/SubLandValidation.js"
+import * as db from "../../utilities/DatabaseHandler.js"
 
 world.beforeEvents.playerBreakBlock.subscribe((e) => {
   permissionCheck(e, "break")
@@ -26,8 +26,7 @@ world.beforeEvents.itemUse.subscribe((e) => {
 
 world.beforeEvents.entityHurt.subscribe((e) => {
   if(e.hurtEntity?.typeId === "minecraft:player" ||
-    e.damageSource?.damagingEntity?.typeId !== "minecraft:player" ||
-    !config.LandLocker.Claims.ProtectCreatures) return;
+    e.damageSource?.damagingEntity?.typeId !== "minecraft:player") return;
   permissionCheck(e, "entityDamage")
 })
 
@@ -53,6 +52,7 @@ function permissionCheck(data, eventType) {
   const accessTrust = permissions?.accessTrust || false
   const containerTrust = permissions?.containerTrust || false
   const fullTrust = permissions?.fullTrust || false
+  const setting = db.fetch("landlocker:setting")
   
   if(fullTrust || publicPermissions.fullTrust) return;
   
@@ -64,8 +64,8 @@ function permissionCheck(data, eventType) {
       if(data.block) {
         if((accessTrust || publicPermissions.accessTrust) && ["button", "lever", "bed", "door", "cart", "boat", "crafting_table", "smithing_table"].some(v => blockEntity.typeId.includes(v))) return;
         player.sendMessage(`§c${messages.NoAccessPermission.replace("{0}", ownerName)}`)
-      } else if (data.itemStack?.typeId === "minecraft:ender_pearl") {
-        if(!config.LandLocker.Claims.EnderPearlsRequireAccessTrust || (accessTrust || publicPermissions.accessTrust)) return;
+      } else if (data.itemStack?.typeId === "minecraft:ender_pearl" && setting.claims["enderPearlsRequireAccessTrust"]) {
+        if((accessTrust || publicPermissions.accessTrust)) return;
         player.sendMessage(`§c${messages.NoAccessPermission.replace("{0}", ownerName)}`)
       } else {
         if((accessTrust || publicPermissions.accessTrust) && ["cart", "boat"].some(v => blockEntity.typeId.includes(v))) return;
@@ -84,6 +84,7 @@ function permissionCheck(data, eventType) {
       player.sendMessage(`§c${messages.NoBuildPermission.replace("{0}", ownerName)}`)
       break;
     case "entityDamage":
+      if(!setting.claims["protectCreatures"]) return;
       data.cancel = true
       player.sendMessage(`§c${messages.NoDamageClaimedEntity.replace("{0}", ownerName)}`)
       break;

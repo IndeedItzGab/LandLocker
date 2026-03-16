@@ -1,11 +1,11 @@
 import { registerCommand }  from "../CommandRegistry.js"
 import * as db from "../../utilities/DatabaseHandler.js"
 import { messages } from "../../messages.js"
-import { config } from "../../config.js"
 import "../../utilities/PlayerClaimBlocks.js"
 import "../../utilities/LandValidation.js"
 import "../../utilities/OverlapLandValidation.js"
 import "../../utilities/RandomIDGenerator.js"
+import { system } from "@minecraft/server"
 
 const commandInformation = {
   name: "claim",
@@ -20,9 +20,22 @@ const commandInformation = {
   ]
 }
 
-registerCommand(commandInformation, (origin, radius = config.LandLocker.Claims.AutomaticNewPlayerClaimsRadius) => {
-  
+let cooldowns = new Map()
+registerCommand(commandInformation, (origin, radius) => {
+
   const player = origin.sourceEntity
+  const setting = db.fetch("landlocker:setting")
+  
+  // Cooldown
+  const cooldown = cooldowns.get(player.id)
+  if(cooldown?.tick >= system.currentTick) {
+    return player.sendMessage(`§c${messages.CommandCooldown.replaceAll("{0}", (cooldown.tick - system.currentTick) / 20)}`)
+  } else {
+    cooldowns.set(player.id, {tick: system.currentTick + setting.commands["cooldown"]*20})
+  }
+  
+  if(!radius) radius = setting.claims["automaticNewPlayerClaimsRadius"]
+
   const c = checkLand(player)
   const isOwner = c?.owner?.toLowerCase() === player.name.toLowerCase()
   const leftX = Math.round(player.location.x - radius);

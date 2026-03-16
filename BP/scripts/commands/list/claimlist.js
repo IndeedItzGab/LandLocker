@@ -2,6 +2,7 @@ import { registerCommand }  from "../CommandRegistry.js"
 import * as db from "../../utilities/DatabaseHandler.js"
 import "../../utilities/PlayerClaimBlocks.js"
 import { messages } from "../../messages.js"
+import { system } from "@minecraft/server"
 
 const commandInformation = {
   name: "claimlist",
@@ -16,10 +17,21 @@ const commandInformation = {
   ]
 }
 
+let cooldowns = new Map()
 registerCommand(commandInformation, (origin, targetPlayerName) => {
   
 
   const player = origin.sourceEntity
+  const setting = db.fetch("landlocker:setting")
+  
+  // Cooldown
+  const cooldown = cooldowns.get(player.id)
+  if(cooldown?.tick >= system.currentTick) {
+    return player.sendMessage(`§c${messages.CommandCooldown.replaceAll("{0}", (cooldown.tick - system.currentTick) / 20)}`)
+  } else {
+    cooldowns.set(player.id, {tick: system.currentTick + setting.commands["cooldown"]*20})
+  }
+  
   const lands = db.fetch("land", true).filter(v => v.owner?.toLowerCase() === player.name.toLowerCase());
   const target = targetPlayerName?.toLowerCase() || player.name?.toLowerCase()
   const playerStatus = db.fetch("landPlayersList", true).find(data => data?.name.toLowerCase() === target)

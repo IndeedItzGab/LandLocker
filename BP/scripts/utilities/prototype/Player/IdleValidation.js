@@ -1,11 +1,10 @@
 import { Player, system, world } from "@minecraft/server"
-import { config } from "../../../config.js"
+import * as db from "../../DatabaseHandler.js"
 /**
  * @return {boolean} true if the player is idling, false otherwise
  */
  
 const idleTracker = new Map();
-const idleThreshold = config.LandLocker.Claims.Accrued_Idle_Threshold*20;
 
 system.runInterval(() => {
   for (const player of world.getPlayers()) {
@@ -30,6 +29,8 @@ system.runInterval(() => {
 
 
 Player.prototype.isIdle = function () {
+  const setting = db.fetch("landlocker:setting")
+  const idleThreshold = setting.claims["accruedIdleThreshold"]*20
   const tracked = idleTracker.get(this.id);
   return tracked ? tracked.ticks >= idleThreshold : false;
 };
