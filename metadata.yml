@@ -4,4 +4,4 @@ status: STABLE
 message: |
   # LandLocker V1.1.6
   - Added a system where operators will automatically get the configuration file at initial.
-  - Fixed issue where a configuration(s) won\'t change when the value is `0`
+  - Fixed issue where a configuration(s) will not change when the value is `0`
