@@ -4,3 +4,7 @@
   - Fixed `/trapped` replying with an error when the player isn't in a claim land.
   - Access trust permission is now required to use ender pearl inside the claim land.
   - Cleaned code and files
+
+  # New Update (4/22/26)
+  - Added a system where operators will automatically get the configuration file at initial.
+  - Fixed issue where a configuration(s) won\'t change when the value is `0`

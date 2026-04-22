@@ -1,13 +1,18 @@
 import { ModalFormData } from "@minecraft/server-ui"
 import * as db from "../../utilities/DatabaseHandler.js"
 
+const toNum = (val, fallback) => {
+  const n = parseInt(val);
+  return isNaN(n) ? fallback : n;
+};
+
 export function SettingCommands(player) {
   let setting = db.fetch("landlocker:setting")
   let commands = setting.commands
   const form = new ModalFormData()
   .title("§l§eCommands")
   .label("This section is about slash commands configurations.")
-  .textField("Cooldown", `${commands["cooldown"]}`)
+  .textField("§lCooldown\n§r§iThis is the cooldown of each commands (per seconds).", `${commands["cooldown"]}`)
   .submitButton("Confirm")
 
   form.show(player).then(res => {
@@ -22,7 +27,7 @@ export function SettingCommands(player) {
       ...setting,
       commands: {
         ...setting.commands,
-        cooldown: parseInt(res.formValues[1]) || parseInt(commands["cooldown"])
+        cooldown: toNum(res.formValues[1], commands["cooldown"])
       }
     }
     player.sendMessage(`§aYour changes have been saved.`)

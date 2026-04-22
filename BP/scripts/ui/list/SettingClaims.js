@@ -1,6 +1,11 @@
 import { ModalFormData } from "@minecraft/server-ui"
 import * as db from "../../utilities/DatabaseHandler.js"
 
+const toNum = (val, fallback) => {
+  const n = parseInt(val);
+  return isNaN(n) ? fallback : n;
+};
+
 export function SettingClaims(player) {
   let setting = db.fetch("landlocker:setting")
   let claims = setting.claims
@@ -40,13 +45,13 @@ export function SettingClaims(player) {
         ...setting.claims,
         protectCreatures: res.formValues[1],
         enderPearlsRequireAccessTrust: res.formValues[2],
-        initialBlocks: parseInt(res.formValues[3]) || parseInt(claims["initialBlocks"]),
-        claimBlocksAccruedPerHour: parseInt(res.formValues[4]) || parseInt(claims["claimBlocksAccruedPerHour"]),
-        accruedIdleThreshold: parseInt(res.formValues[5]) || parseInt(claims["accruedIdleThreshold"]),
-        maxAccruedClaimBlocks: parseInt(res.formValues[6]) || parseInt(claims["maxAccruedClaimBlocks"]),
-        automaticNewPlayerClaimsRadius: parseInt(res.formValues[7]) || parseInt(claims["automaticNewPlayerClaimsRadius"]),
-        minSize: parseInt(res.formValues[8]) || parseInt(claims["minSize"]),
-        minWide: parseInt(res.formValues[9])|| parseInt(claims["minWide"]),
+        initialBlocks: toNum(res.formValues[3], claims["initialBlocks"]),
+        claimBlocksAccruedPerHour: toNum(res.formValues[4], claims["claimBlocksAccruedPerHour"]),
+        accruedIdleThreshold: toNum(res.formValues[5], claims["accruedIdleThreshold"]),
+        maxAccruedClaimBlocks: toNum(res.formValues[6], claims["maxAccruedClaimBlocks"]),
+        automaticNewPlayerClaimsRadius: toNum(res.formValues[7], claims["automaticNewPlayerClaimsRadius"]),
+        minSize: toNum(res.formValues[8], claims["minSize"]),
+        minWide: toNum(res.formValues[9], claims["minWide"]),
         investigationTool: res.formValues[10] || claims["investigationTool"],
         modificationTool: res.formValues[11] || claims["modificationTool"],
       },
