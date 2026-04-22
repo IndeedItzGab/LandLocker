@@ -1,9 +1,7 @@
 name: LandLocker
-version: V1.1.5
+version: V1.1.6
 status: STABLE
 message: |
-  # LandLocker 1.1.5
-  - Added in-game configurations to provide further support for realms. Therefore, file configuring is now removed.
-  - Added slash commands cooldown.
-  - Added default minimum size on land claims at resized.
-  - Adjustment with default minimum size.
+  # LandLocker V1.1.6
+  - Added a system where operators will automatically get the configuration file at initial.
+  - Fixed issue where a configuration(s) won\'t change when the value is `0`
