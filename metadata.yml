@@ -1,7 +1,11 @@
 name: LandLocker
-version: V1.1.6
+version: V1.1.7
 status: STABLE
 message: |
-  # LandLocker V1.1.6
-  - Added a system where operators will automatically get the configuration file at initial.
-  - Fixed issue where a configuration(s) will not change when the value is `0`
+  # LandLocker V1.1.7
+  - Improvement with visualization when holding the modification tool by decreasing performance consumption and increasing efficiency in the process.
+  - Improvement with AFK detection where it will no longer provide claim blocks for people who use AFK machines.
+  - Improvement with receiving accrued claim blocks.
+    - Accurate claim blocks delivery per 5 minutes in order to satisfy the specified value
+    - Delivering the accrued claim blocks is no longer globally delivered. Initial timer of each players for deliveries will start when they joined the server.
+  - Updated Copyright license.

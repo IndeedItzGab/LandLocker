@@ -1,6 +1,8 @@
 import { world } from "@minecraft/server";
 import * as db from "./DatabaseHandler.js";
 
+
+
 globalThis.claimBlocks = (player, landId = null) => {
   const playerStatus = db.fetch("landPlayersList", true).find(data => data?.name.toLowerCase() === player.name.toLowerCase())
   const claimBlocks = playerStatus?.claimBlocks?.play + playerStatus?.claimBlocks?.bonus
@@ -9,5 +11,5 @@ globalThis.claimBlocks = (player, landId = null) => {
     if(!land.owner || land.id === landId) continue;
     claimedLandBlocks += (Math.abs(land.bounds.rx - land.bounds.lx) + 1) * (Math.abs(land.bounds.rz - land.bounds.lz) + 1)
   }
-  return claimBlocks - claimedLandBlocks
+  return Math.floor(claimBlocks - claimedLandBlocks)
 }

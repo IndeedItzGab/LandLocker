@@ -8,3 +8,14 @@
   # New Update (4/22/26)
   - Added a system where operators will automatically get the configuration file at initial.
   - Fixed issue where a configuration(s) won\'t change when the value is `0`
+
+- Improvement with visualization when holding the modification tool by decreasing performance consumption and increasing efficiency in the process.
+- Improvement with AFK detection where it will no longer provide claim blocks for people who use AFK machines.
+- Improvement with receiving accrued claim blocks.
+  - Accurate claim blocks delivery per 5 minutes in order to satisfy the specified value
+  - Delivering the accrued claim blocks is no longer globally delivered. Initial timer of each players for deliveries will start when they joined the server.
+- Updated Copyright license.
+
+
+- Improvement with resizing and claiming a land by decreasing load while also increasing efficiency and and reliability in the process.
+- New projects icon and thumbnail.

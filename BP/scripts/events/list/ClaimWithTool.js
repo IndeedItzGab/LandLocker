@@ -13,16 +13,24 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   if(!event.isFirstEvent) return;
   const player = event.player
   const block = event.block
-  const isAdmin = player.playerPermissionLevel === 2
+  const isAdmin = player.isAdmin()
   const setting = db.fetch("landlocker:setting")
-  // Early return to avoid further execution causing to decrease the performance of landlocker
+  const claimTag = player.getTags().find(d => d.includes("shovelClaim:"))
+  const isSubdivideClaim = player.hasTag("shovelMode:subdivisionClaims")
+  let lands = db.fetch("land", true)
+  
+
+  // Early exit to avoid further execution causing to decrease the performance of landlocker
   const usedItem = player?.getComponent("inventory")?.container?.getItem(player?.selectedSlotIndex)
   if(usedItem?.typeId !== setting.claims["modificationTool"]) return;
   
   // Detect whether the player is resizing a subdivided claim.
   if(player.getTags().some(d => d.startsWith("isEditingSub:"))) return;
+
+  // Detect whether the player is resizing a claim
+  if(player.getTags().find(v => v.startsWith("editingLand:"))) return;
   
-  let lands = db.fetch("land", true)
+  // Detect whether the targetted block is a corner of a subdivision
   if(checkLand(block)) {
     if(lands.some(land => {
       return land.subdivisions.some(d => {
@@ -34,13 +42,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     })) return
   }
   
-  const claimTag = player.getTags().find(d => d.includes("shovelClaim:"))
-  const editData = player.getTags().find(v => v.startsWith("editingLand:"))
-  const isSubdivideClaim = player.hasTag("shovelMode:subdivisionClaims")
-  if(editData) return;
-
-  
-  // Check whether it's claim's corner, then return to avoid further execution that conflicts with claim resizing.
+  // Check whether it's claim's corner, then exit immdiately to avoid further execution that conflicts with claim resizing.
   if(lands.some(d => (
     (d.bounds.lx === block.location.x && d.bounds.lz === block.location.z) ||
     (d.bounds.lx === block.location.x && d.bounds.rz === block.location.z) ||
@@ -53,7 +55,9 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   if(checkSubLand(block) && isSubdivideClaim) return player.sendMessage(`§c${messages.CreateSubdivisionOverlap}`)
   if((!checkLand(block) || (!checkLand(block).owner && !isAdmin) || (checkLand(block).owner !== player.name.toLowerCase())) && isSubdivideClaim) return player.sendMessage(`§c${messages.DeleteClaimMissing}`) // Unsure message
   
+  
   if(!claimTag) {
+    // This is reponsible for initial claiming (first corner)
     system.run(() => player.addTag(`shovelClaim:${block.location.x}:${block.location.z}`))
     if(!isSubdivideClaim) {
       globalThis.particleData.push({
@@ -69,6 +73,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     }
     event.cancel = true
   } else {
+    // This is responsible for claiming the land (second corner)
     // Remove the claim tag
     system.run(() => player.removeTag(claimTag))
     
@@ -95,9 +100,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     const leftZ = Math.round(tagLZ);
     const rightZ = Math.round(tagRZ);
 
-
     let particleData = [];
-
     if(isSubdivideClaim) {
       // Responsible for claiming a subdivided claim inside a claimed land.
       const land = lands.find(d => d.id=== checkLand(block).id)
@@ -132,7 +135,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
       const permutationClaimBlocks = claimBlocks(player) - (Math.abs(rightX - leftX) + 1) * (Math.abs(rightZ- leftZ) + 1) 
       const isAdminMode = player.getTags().some(d => d === "shovelMode:adminClaims")
 
-      // Remove the previous border entity
+      // Remove the previous border particle
       globalThis.particleData = globalThis.particleData.filter(d => (d.color.red !== 0 && d.color.green !== 1 && d.color.blue !== 1) && d.owner === player.name);
 
       // Some important filter stuff
@@ -140,6 +143,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
       if((((Math.abs(rightX - leftX) + 1) * (Math.abs(rightZ- leftZ) + 1)) < (setting.claims["minSize"]*setting.claims["minSize"])) && !isAdminMode && !isSubdivideClaim) return player.sendMessage(`§c${messages.ResizeClaimInsufficientArea.replace("{0}", setting.claims["minSize"]*setting.claims["minSize"])}`)
       if((leftX + setting.claims["minWide"] > rightX || leftZ + setting.claims["minWide"] > rightZ) && !isAdminMode && !isSubdivideClaim) return player.sendMessage(`§c${messages.NewClaimTooNarrow.replace("{0}", setting.claims["minWide"])}`)
 
+      // Check whether the claim is overlapping an already existing land and exit immidiately before creating a land
       if(!isSubdivideClaim && overlapCheck(player, leftX, rightX, leftZ, rightZ)) return player.sendMessage(`§c${messages.CreateClaimFailOverlapShort}`)
 
       lands.push({
@@ -181,6 +185,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
 
       player.sendMessage(`§a${messages.CreateClaimSuccess}`)
     }
+    
     globalThis.particleData = particleData
     db.store("land", lands)
     event.cancel = true

@@ -36,7 +36,7 @@ registerCommand(commandInformation, (origin, targetPlayerName) => {
   const target = targetPlayerName?.toLowerCase() || player.name?.toLowerCase()
   const playerStatus = db.fetch("landPlayersList", true).find(data => data?.name.toLowerCase() === target)
   if(!playerStatus) return player.sendMessage(`§c${messages.PlayerNotFound2}`)
-  const play = playerStatus.claimBlocks.play
+  const play = Math.floor(playerStatus.claimBlocks.play)
   const bonus = playerStatus.claimBlocks.bonus
   let l = ''
   if(lands.length === 0) {
